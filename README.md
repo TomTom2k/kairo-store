@@ -1,36 +1,224 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌿 Kairo Plants - Website Cửa Hàng Cây Xanh
 
-## Getting Started
+Website bán cây xanh hiện đại với animations đẹp mắt và được tối ưu SEO toàn diện.
 
-First, run the development server:
+## ✨ Tính Năng
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 🎨 Giao Diện
+- ✅ Theme màu xanh lá chủ đạo (có thể tùy chỉnh)
+- ✅ Animations 3D mượt mà với CSS
+- ✅ Responsive design (mobile-first)
+- ✅ Dark mode support
+- ✅ Glassmorphism effects
+
+### 🚀 Hiệu Năng
+- ✅ Server Components (Next.js 15)
+- ✅ Client Components chỉ cho interactive parts
+- ✅ Image optimization với Next.js Image
+- ✅ Lazy loading
+- ✅ CSS animations (không dùng heavy libraries)
+
+### 🔍 SEO
+- ✅ Metadata đầy đủ
+- ✅ Structured Data (Schema.org)
+- ✅ Sitemap.xml tự động
+- ✅ Robots.txt
+- ✅ Open Graph tags
+- ✅ Semantic HTML
+- ✅ ARIA labels & accessibility
+
+### 🎯 Components
+
+#### Server Components (SEO-friendly)
+```
+src/components/sections/
+├── Hero.tsx              # Hero section
+├── FeaturedPlants.tsx    # Products showcase
+├── Categories.tsx        # Product categories
+├── Benefits.tsx          # Why choose us
+└── Newsletter.tsx        # Newsletter signup
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Client Components (Interactive)
+```
+src/components/interactive/
+├── HeroButtons.tsx       # CTA buttons
+├── PlantCard.tsx         # Product cards
+├── CategoryCard.tsx      # Category cards
+└── NewsletterForm.tsx    # Email form
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+src/components/animations/
+├── FloatingLeaves.tsx    # Floating leaves effect
+└── PlantPot3D.tsx        # 3D plant pot
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Layout Components
+```
+src/components/layout/
+├── Header.tsx            # Navigation header
+└── Footer.tsx            # Footer with links
+```
 
-## Learn More
+## 🎨 Tùy Chỉnh Theme
 
-To learn more about Next.js, take a look at the following resources:
+### Thay Đổi Màu Chủ Đạo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+File: `src/app/globals.css`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```css
+/* Xanh lá (mặc định) */
+--plant-primary: oklch(0.55 0.15 145);
 
-## Deploy on Vercel
+/* Xanh dương */
+--plant-primary: oklch(0.55 0.15 220);
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+/* Tím */
+--plant-primary: oklch(0.55 0.15 290);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+/* Cam */
+--plant-primary: oklch(0.60 0.18 40);
+```
+
+Xem chi tiết: [THEME-CONFIG.md](./THEME-CONFIG.md)
+
+## 📦 Cấu Trúc Project
+
+```
+kairo-store/web/
+├── public/
+│   ├── manifest.json          # PWA manifest
+│   └── favicon.ico
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx         # Root layout với metadata
+│   │   ├── page.tsx           # Homepage
+│   │   ├── globals.css        # Global styles & animations
+│   │   ├── sitemap.ts         # Auto-generated sitemap
+│   │   └── robots.ts          # Robots.txt
+│   ├── components/
+│   │   ├── animations/        # Animation components
+│   │   ├── interactive/       # Client components
+│   │   ├── layout/            # Layout components
+│   │   ├── sections/          # Page sections
+│   │   └── ui/                # shadcn components
+│   └── lib/
+│       └── utils.ts           # Utility functions
+├── THEME-CONFIG.md            # Hướng dẫn tùy chỉnh theme
+├── SEO-GUIDE.md               # Hướng dẫn SEO chi tiết
+└── README.md
+```
+
+## 🚀 Getting Started
+
+### Installation
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+### Development
+```bash
+# Development với hot reload
+pnpm dev
+
+# Mở browser tại http://localhost:3000
+```
+
+### Linting
+```bash
+pnpm lint
+```
+
+## 🎯 SEO Checklist
+
+### Đã Hoàn Thành ✅
+- [x] Server/Client components tách biệt
+- [x] Metadata & Open Graph tags
+- [x] JSON-LD Structured Data
+- [x] Semantic HTML5
+- [x] ARIA labels & accessibility
+- [x] Image alt text & lazy loading
+- [x] Sitemap.xml auto-generated
+- [x] Robots.txt configured
+- [x] PWA manifest.json
+
+### Cần Làm Sau Deploy 📝
+- [ ] Google Search Console verification
+- [ ] Google Analytics setup
+- [ ] Test Rich Snippets
+- [ ] Submit sitemap to Google
+- [ ] Monitor Core Web Vitals
+
+Xem chi tiết: [SEO-GUIDE.md](./SEO-GUIDE.md)
+
+## 🎨 Design Features
+
+### Animations
+- **Floating Leaves:** CSS keyframe animations
+- **3D Plant Pot:** CSS transforms với perspective
+- **Hover Effects:** Smooth transitions
+- **Scroll Animations:** Fade in & slide up
+- **Gradient Animations:** Dynamic color shifts
+
+### Responsive Breakpoints
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
+- Large Desktop: > 1280px
+
+## 📱 Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile Safari
+- Chrome Mobile
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **React:** 19.2.0
+- **Styling:** Tailwind CSS 4
+- **UI Components:** shadcn/ui
+- **Icons:** Lucide React
+- **Fonts:** Geist Sans & Geist Mono
+- **Type Safety:** TypeScript
+
+## 📚 Documentation
+
+- [THEME-CONFIG.md](./THEME-CONFIG.md) - Hướng dẫn tùy chỉnh màu sắc
+- [SEO-GUIDE.md](./SEO-GUIDE.md) - Hướng dẫn SEO chi tiết
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Credits
+
+- Design & Development: Kairo Team
+- Icons: Lucide
+- Fonts: Vercel (Geist)
+- Images: Unsplash
+
+---
+
+Made with 💚 by Kairo Plants Team
