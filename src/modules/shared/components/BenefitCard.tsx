@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/modules/shared";
 import { Droplets, Heart, Shield, Truck } from "lucide-react";
 
 // Map icon names to components trong client component

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "@/modules/shared";
 import { Flower, Home, Leaf, Palmtree, Sprout, TreePine } from "lucide-react";
 import { useRouter } from "next/navigation";
 

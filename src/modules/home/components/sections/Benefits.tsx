@@ -1,6 +1,5 @@
-import { BenefitCard } from "@/components/interactive/BenefitCard";
-import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { ParallaxSection } from "@/components/animations/ParallaxSection";
+import { BenefitCard } from "@/modules/shared";
+import { ScrollReveal, ParallaxSection } from "@/modules/shared";
 
 const benefits = [
   {
@@ -58,7 +57,7 @@ export function Benefits() {
 
           <ParallaxSection speed={0.5}>
             <ScrollReveal>
-              <h2 id="benefits-heading" className="text-4xl md:text-5xl font-bold tracking-tight">
+              <h2 id="benefits-heading" className="text-4xl md:text-5xl font-bold tracking-tight scroll-mt-24">
                 <span className="gradient-animate bg-clip-text text-transparent">
                   Tại Sao Chọn Chúng Tôi?
                 </span>

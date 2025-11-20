@@ -1,11 +1,5 @@
-import { Hero } from '@/components/sections/Hero';
-import { FeaturedPlants } from '@/components/sections/FeaturedPlants';
-import { Categories } from '@/components/sections/Categories';
-import { Benefits } from '@/components/sections/Benefits';
-import { Newsletter } from '@/components/sections/Newsletter';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
+import { Hero, FeaturedPlants, Categories, Benefits, Newsletter } from '@/modules/home';
+import { Header, Footer, ScrollIndicator } from '@/modules/shared';
 
 export default function Home() {
 	return (

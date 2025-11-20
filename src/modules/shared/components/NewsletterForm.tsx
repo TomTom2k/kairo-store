@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/modules/shared";
 import { useState } from "react";
 
 export function NewsletterForm() {

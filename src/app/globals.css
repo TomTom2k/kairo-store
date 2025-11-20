@@ -952,14 +952,18 @@ html.dark .hover-glow:hover {
 /* Gradient animations */
 .gradient-animate {
 	background: linear-gradient(
-		-45deg,
-		var(--plant-primary),
-		var(--plant-primary-light),
-		var(--plant-accent),
-		var(--plant-primary)
+		135deg,
+		var(--plant-primary-dark) 0%,
+		var(--plant-primary) 25%,
+		var(--plant-primary-light) 50%,
+		var(--plant-primary) 75%,
+		var(--plant-primary-dark) 100%
 	);
-	background-size: 400% 400%;
-	animation: gradient-shift 8s ease infinite;
+	background-size: 200% 200%;
+	animation: gradient-shift 6s ease infinite;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
 }
 
 @keyframes gradient-shift {

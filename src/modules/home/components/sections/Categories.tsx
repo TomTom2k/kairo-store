@@ -1,6 +1,5 @@
-import { CategoryCard } from "@/components/interactive/CategoryCard";
-import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { ParallaxSection } from "@/components/animations/ParallaxSection";
+import { CategoryCard } from "@/modules/shared";
+import { ScrollReveal, ParallaxSection } from "@/modules/shared";
 import { Leaf } from "lucide-react";
 
 // Chỉ truyền data, không truyền icon components
@@ -99,7 +98,7 @@ export function Categories() {
             <ScrollReveal>
               <h2 
                 id="categories-heading"
-                className="text-4xl md:text-5xl font-bold tracking-tight"
+                className="text-4xl md:text-5xl font-bold tracking-tight scroll-mt-24"
                 itemProp="name"
               >
                 Danh Mục Sản Phẩm

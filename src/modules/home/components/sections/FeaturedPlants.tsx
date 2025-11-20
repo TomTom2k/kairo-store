@@ -1,8 +1,7 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { PlantCard } from "@/components/interactive/PlantCard";
-import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { ParallaxSection } from "@/components/animations/ParallaxSection";
+import { PlantCard } from "@/modules/shared";
+import { ScrollReveal, ParallaxSection } from "@/modules/shared";
 
 const plants = [
   {
@@ -83,7 +82,7 @@ export function FeaturedPlants() {
             <ScrollReveal>
               <h2 
                 id="featured-plants-heading"
-                className="text-4xl md:text-5xl font-bold tracking-tight"
+                className="text-4xl md:text-5xl font-bold tracking-tight scroll-mt-24"
                 itemProp="name"
               >
                 <span className="gradient-animate bg-clip-text text-transparent">
