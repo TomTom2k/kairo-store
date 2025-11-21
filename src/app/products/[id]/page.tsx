@@ -121,7 +121,7 @@ export default function ProductPage() {
           {/* Left: Image Gallery */}
           <ProductImageGallery
             productName={product.name}
-            mainImage={product.image}
+            images={product.images}
           />
 
           {/* Right: Product Info */}
@@ -133,6 +133,10 @@ export default function ProductPage() {
           <ProductTabs
             description={product.description}
             category={product.category}
+            careLight={product.careLight}
+            careWater={product.careWater}
+            careTemperature={product.careTemperature}
+            careFertilizer={product.careFertilizer}
           />
         </div>
 

@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shared/ui";
-import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Plus, X } from "lucide-react";
 import Link from "next/link";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProduct, updateProduct } from "@/api/services/products.service";
+import { useQueryClient } from "@tanstack/react-query";
 import { productKeys } from "@/hooks/useProducts";
-import { toSupabaseProduct } from "@/lib/adapters/product.adapter";
 import type { Product } from "@/lib/adapters/product.adapter";
 
 interface ProductFormProps {
@@ -34,7 +32,7 @@ export function ProductForm({
   const [category, setCategory] = useState(
     initialData?.category || "Cây Trong Nhà"
   );
-  const [image, setImage] = useState(initialData?.image || "");
+  const [images, setImages] = useState<string[]>(initialData?.images || [""]);
   const [description, setDescription] = useState(
     initialData?.description || ""
   );
@@ -43,22 +41,60 @@ export function ProductForm({
   );
   const [badge, setBadge] = useState(initialData?.badge || "");
 
+  // Care instruction states
+  const [careLight, setCareLight] = useState(initialData?.careLight || "");
+  const [careWater, setCareWater] = useState(initialData?.careWater || "");
+  const [careTemperature, setCareTemperature] = useState(
+    initialData?.careTemperature || ""
+  );
+  const [careFertilizer, setCareFertilizer] = useState(
+    initialData?.careFertilizer || ""
+  );
+
+  const handleImageChange = (index: number, value: string) => {
+    const newImages = [...images];
+    newImages[index] = value;
+    setImages(newImages);
+  };
+
+  const addImageField = () => {
+    setImages([...images, ""]);
+  };
+
+  const removeImageField = (index: number) => {
+    if (images.length > 1) {
+      const newImages = images.filter((_, i) => i !== index);
+      setImages(newImages);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsSubmitting(true);
 
     try {
+      // Filter out empty image URLs
+      const validImages = images.filter((img) => img.trim() !== "");
+
+      if (validImages.length === 0) {
+        throw new Error("Vui lòng thêm ít nhất một hình ảnh");
+      }
+
       const productData = {
         name,
         price,
         price_value: parseInt(priceValue),
         rating: initialData?.rating || 0,
-        image,
+        images: validImages,
         description,
         category,
         quantity: parseInt(quantity),
         badge: badge || null,
+        care_light: careLight || null,
+        care_water: careWater || null,
+        care_temperature: careTemperature || null,
+        care_fertilizer: careFertilizer || null,
       };
 
       const url = isEditing
@@ -169,27 +205,124 @@ export function ProductForm({
           </div>
 
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <h3 className="font-semibold text-lg">Hình Ảnh</h3>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">URL Hình ảnh</label>
-              <input
-                type="url"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
-                required
-              />
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-lg">Hình Ảnh</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addImageField}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Thêm ảnh
+              </Button>
             </div>
-            {image && (
-              <div className="mt-4 aspect-video relative rounded-lg overflow-hidden border border-border bg-muted">
-                <img
-                  src={image}
-                  alt="Preview"
-                  className="w-full h-full object-contain"
+
+            <div className="space-y-4">
+              {images.map((image, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium">
+                      Ảnh {index + 1}
+                      {index === 0 && " (Ảnh chính)"}
+                    </label>
+                    {images.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeImageField(index)}
+                        className="h-6 w-6 p-0"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    value={image}
+                    onChange={(e) => handleImageChange(index, e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    required={index === 0}
+                  />
+                  {image && (
+                    <div className="mt-2 aspect-video relative rounded-lg overflow-hidden border border-border bg-muted">
+                      <img
+                        src={image}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-card p-6 rounded-lg border border-border space-y-4">
+            <h3 className="font-semibold text-lg">Hướng Dẫn Chăm Sóc</h3>
+            <p className="text-sm text-muted-foreground">
+              Tùy chỉnh hướng dẫn chăm sóc cho sản phẩm này
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <span>☀️</span>
+                  Ánh Sáng
+                </label>
+                <textarea
+                  value={careLight}
+                  onChange={(e) => setCareLight(e.target.value)}
+                  rows={3}
+                  placeholder="Ví dụ: Ánh sáng gián tiếp, tránh ánh nắng trực tiếp"
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
               </div>
-            )}
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <span>💧</span>
+                  Tưới Nước
+                </label>
+                <textarea
+                  value={careWater}
+                  onChange={(e) => setCareWater(e.target.value)}
+                  rows={3}
+                  placeholder="Ví dụ: Tưới 2-3 lần/tuần, giữ đất ẩm"
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <span>🌡️</span>
+                  Nhiệt Độ
+                </label>
+                <textarea
+                  value={careTemperature}
+                  onChange={(e) => setCareTemperature(e.target.value)}
+                  rows={3}
+                  placeholder="Ví dụ: 18-25°C"
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <span>🌱</span>
+                  Bón Phân
+                </label>
+                <textarea
+                  value={careFertilizer}
+                  onChange={(e) => setCareFertilizer(e.target.value)}
+                  rows={3}
+                  placeholder="Ví dụ: Bón phân 1 lần/tháng vào mùa sinh trưởng"
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

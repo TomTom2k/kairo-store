@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Script to run database migration for quantity field
+# Script to run database migration for images and care instructions
 # This script will execute the migration SQL file in Supabase
 
-echo "🔄 Running database migration: Add quantity field..."
+echo "🔄 Running database migration: Add images array and care instructions..."
 echo ""
 
 # Check if .env.local exists
@@ -24,7 +24,7 @@ if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; th
 fi
 
 # Read migration file
-MIGRATION_FILE="supabase/migrations/001_add_quantity_field.sql"
+MIGRATION_FILE="supabase/migrations/002_add_images_and_care.sql"
 
 if [ ! -f "$MIGRATION_FILE" ]; then
     echo "❌ Error: Migration file not found: $MIGRATION_FILE"
@@ -47,4 +47,4 @@ echo ""
 echo "Next steps:"
 echo "1. Verify the migration in Supabase Dashboard"
 echo "2. Refresh your application"
-echo "3. Test CRUD operations"
+echo "3. Test CRUD operations with multiple images and care instructions"

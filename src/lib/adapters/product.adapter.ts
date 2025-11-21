@@ -10,11 +10,15 @@ export interface Product {
   price: string;
   priceValue: number;
   rating: number;
-  image: string;
+  images: string[];
   description: string;
   badge: string | null;
   category: string;
   quantity: number;
+  careLight?: string | null;
+  careWater?: string | null;
+  careTemperature?: string | null;
+  careFertilizer?: string | null;
 }
 
 /**
@@ -29,11 +33,15 @@ export function adaptSupabaseProduct(
     price: supabaseProduct.price,
     priceValue: supabaseProduct.price_value,
     rating: supabaseProduct.rating,
-    image: supabaseProduct.image,
+    images: supabaseProduct.images,
     description: supabaseProduct.description,
     badge: supabaseProduct.badge,
     category: supabaseProduct.category,
     quantity: supabaseProduct.quantity,
+    careLight: supabaseProduct.care_light,
+    careWater: supabaseProduct.care_water,
+    careTemperature: supabaseProduct.care_temperature,
+    careFertilizer: supabaseProduct.care_fertilizer,
   };
 }
 
@@ -58,10 +66,14 @@ export function toSupabaseProduct(
     price: product.price,
     price_value: product.priceValue,
     rating: product.rating,
-    image: product.image,
+    images: product.images,
     description: product.description,
     badge: product.badge,
     category: product.category,
     quantity: product.quantity,
+    care_light: product.careLight,
+    care_water: product.careWater,
+    care_temperature: product.careTemperature,
+    care_fertilizer: product.careFertilizer,
   };
 }

@@ -3,17 +3,20 @@
 // ============================================
 
 export interface Product {
-	id: number;
-	name: string;
-	price: string;
-	priceValue: number;
-	image: string;
-	description: string;
-	category: string;
-	rating: number;
-	stock: string;
-	badge: string | null;
-	inStock: boolean;
+  id: number;
+  name: string;
+  price: string;
+  priceValue: number;
+  images: string[];
+  description: string;
+  category: string;
+  rating: number;
+  quantity: number;
+  badge: string | null;
+  careLight?: string | null;
+  careWater?: string | null;
+  careTemperature?: string | null;
+  careFertilizer?: string | null;
 }
 
 // ============================================
@@ -21,19 +24,19 @@ export interface Product {
 // ============================================
 
 export interface CartItem {
-	id: string; // Unique cart item ID
-	product: Product;
-	quantity: number;
-	addedAt: Date;
+  id: string; // Unique cart item ID
+  product: Product;
+  quantity: number;
+  addedAt: Date;
 }
 
 export interface Cart {
-	items: CartItem[];
-	totalItems: number;
-	subtotal: number;
-	shipping: number;
-	tax: number;
-	total: number;
+  items: CartItem[];
+  totalItems: number;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
 }
 
 // ============================================
@@ -41,45 +44,45 @@ export interface Cart {
 // ============================================
 
 export interface GuestInfo {
-	name: string;
-	email: string;
-	phone: string;
-	address: string;
-	city: string;
-	notes?: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  notes?: string;
 }
 
 export interface OrderItem {
-	productId: number;
-	productName: string;
-	productImage: string;
-	price: number;
-	quantity: number;
-	subtotal: number;
+  productId: number;
+  productName: string;
+  productImage: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
 }
 
 export enum OrderStatus {
-	PENDING = 'pending',
-	CONFIRMED = 'confirmed',
-	PROCESSING = 'processing',
-	SHIPPING = 'shipping',
-	DELIVERED = 'delivered',
-	CANCELLED = 'cancelled',
+  PENDING = "pending",
+  CONFIRMED = "confirmed",
+  PROCESSING = "processing",
+  SHIPPING = "shipping",
+  DELIVERED = "delivered",
+  CANCELLED = "cancelled",
 }
 
 export interface Order {
-	id: string;
-	orderNumber: string;
-	items: OrderItem[];
-	guestInfo: GuestInfo;
-	subtotal: number;
-	shipping: number;
-	tax: number;
-	total: number;
-	status: OrderStatus;
-	paymentMethod: 'COD' | 'BANK_TRANSFER';
-	createdAt: Date;
-	estimatedDelivery: Date;
+  id: string;
+  orderNumber: string;
+  items: OrderItem[];
+  guestInfo: GuestInfo;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+  status: OrderStatus;
+  paymentMethod: "COD" | "BANK_TRANSFER";
+  createdAt: Date;
+  estimatedDelivery: Date;
 }
 
 // ============================================
@@ -87,16 +90,16 @@ export interface Order {
 // ============================================
 
 export interface ApiResponse<T> {
-	success: boolean;
-	data?: T;
-	error?: string;
-	message?: string;
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
 }
 
 export interface PaginatedResponse<T> {
-	data: T[];
-	total: number;
-	page: number;
-	pageSize: number;
-	hasMore: boolean;
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  hasMore: boolean;
 }
