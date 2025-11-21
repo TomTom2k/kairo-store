@@ -9,6 +9,7 @@ export interface Product {
 	badge: string | null;
 	category: string;
 	stock: string;
+	inStock: boolean;
 }
 
 export const mockProducts: Product[] = [
@@ -23,6 +24,7 @@ export const mockProducts: Product[] = [
 		badge: 'Bán Chạy',
 		category: 'Cây Trong Nhà',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 2,
@@ -35,6 +37,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giảm 20%',
 		category: 'Cây Văn Phòng',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 3,
@@ -47,6 +50,7 @@ export const mockProducts: Product[] = [
 		badge: 'Mới',
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 4,
@@ -59,6 +63,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Lọc Không Khí',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 5,
@@ -71,6 +76,7 @@ export const mockProducts: Product[] = [
 		badge: 'Bán Chạy',
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 6,
@@ -83,6 +89,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 7,
@@ -95,6 +102,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giá Tốt',
 		category: 'Cây Sen Đá',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 8,
@@ -107,6 +115,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 9,
@@ -119,6 +128,7 @@ export const mockProducts: Product[] = [
 		badge: 'Mới',
 		category: 'Cây Nhiệt Đới',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 10,
@@ -131,6 +141,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Trong Nhà',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 11,
@@ -143,6 +154,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Trong Nhà',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 12,
@@ -155,6 +167,7 @@ export const mockProducts: Product[] = [
 		badge: 'Bán Chạy',
 		category: 'Cây Văn Phòng',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 13,
@@ -167,6 +180,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Ngoài Trời',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 14,
@@ -179,6 +193,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giảm 15%',
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 15,
@@ -191,6 +206,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Lọc Không Khí',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 16,
@@ -203,6 +219,7 @@ export const mockProducts: Product[] = [
 		badge: 'Cao Cấp',
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 17,
@@ -215,6 +232,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Sen Đá',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 18,
@@ -227,6 +245,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Ngoài Trời',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 19,
@@ -239,6 +258,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Trong Nhà',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 20,
@@ -251,6 +271,7 @@ export const mockProducts: Product[] = [
 		badge: 'Mới',
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 21,
@@ -263,6 +284,7 @@ export const mockProducts: Product[] = [
 		badge: 'Bán Chạy',
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 22,
@@ -275,6 +297,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Sen Đá',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 23,
@@ -287,6 +310,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Nhiệt Đới',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 24,
@@ -299,6 +323,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giảm 10%',
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 25,
@@ -311,6 +336,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Văn Phòng',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 26,
@@ -323,6 +349,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Ngoài Trời',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 27,
@@ -335,6 +362,7 @@ export const mockProducts: Product[] = [
 		badge: 'Mới',
 		category: 'Cây Lọc Không Khí',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 28,
@@ -347,6 +375,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giá Tốt',
 		category: 'Cây Sen Đá',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 29,
@@ -359,6 +388,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Nhiệt Đới',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 30,
@@ -371,6 +401,7 @@ export const mockProducts: Product[] = [
 		badge: 'Bán Chạy',
 		category: 'Cây Phong Thủy',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 31,
@@ -383,6 +414,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 32,
@@ -395,6 +427,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Ngoài Trời',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 33,
@@ -407,6 +440,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Trong Nhà',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 34,
@@ -419,6 +453,7 @@ export const mockProducts: Product[] = [
 		badge: 'Cao Cấp',
 		category: 'Cây Cảnh',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 35,
@@ -431,6 +466,7 @@ export const mockProducts: Product[] = [
 		badge: null,
 		category: 'Cây Văn Phòng',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 	{
 		id: 36,
@@ -443,6 +479,7 @@ export const mockProducts: Product[] = [
 		badge: 'Giảm 15%',
 		category: 'Cây Lọc Không Khí',
 		stock: 'Còn hàng',
+		inStock: true,
 	},
 ];
 

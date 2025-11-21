@@ -1,38 +1,56 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, Minus, Plus, ShoppingCart, Heart, Share2 } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingCart, Heart, Share2, Check } from 'lucide-react';
 import { Button } from '@/shared/ui';
+import { useCartStore } from '@/store/useCartStore';
+import { Product } from '@/api/types';
+import { Toast } from '@/shared/components/Toast';
 
 interface ProductInfoProps {
-	name: string;
-	price: string;
-	rating: number;
-	stock: string;
-	category: string;
-	badge: string | null;
-	description: string;
+	product: Product;
 }
 
-export function ProductInfo({
-	name,
-	price,
-	rating,
-	stock,
-	category,
-	badge,
-	description,
-}: ProductInfoProps) {
+export function ProductInfo({ product }: ProductInfoProps) {
+	const { addItem } = useCartStore();
 	const [quantity, setQuantity] = useState(1);
 	const [isFavorite, setIsFavorite] = useState(false);
+	const [isAdding, setIsAdding] = useState(false);
+	const [isCopied, setIsCopied] = useState(false);
+	const [showToast, setShowToast] = useState(false);
+	const [showAddToCartToast, setShowAddToCartToast] = useState(false);
 
 	const handleQuantityChange = (delta: number) => {
 		setQuantity((prev) => Math.max(1, Math.min(99, prev + delta)));
 	};
 
 	const handleAddToCart = () => {
-		// TODO: Implement add to cart functionality
-		alert(`Đã thêm ${quantity} ${name} vào giỏ hàng!`);
+		setIsAdding(true);
+		
+		// Add to cart via Zustand store
+		addItem(product, quantity);
+		
+		// Show toast notification
+		setShowAddToCartToast(true);
+		
+		// Show success feedback
+		setTimeout(() => {
+			setIsAdding(false);
+			// Reset quantity after adding
+			setQuantity(1);
+		}, 600);
+	};
+
+	const handleCopyLink = async () => {
+		try {
+			const productUrl = `${window.location.origin}/products/${product.id}`;
+			await navigator.clipboard.writeText(productUrl);
+			setIsCopied(true);
+			setShowToast(true);
+			setTimeout(() => setIsCopied(false), 2000);
+		} catch (err) {
+			console.error('Failed to copy:', err);
+		}
 	};
 
 	return (
@@ -40,11 +58,11 @@ export function ProductInfo({
 			{/* Category & Badge */}
 			<div className='flex items-center gap-2 flex-wrap'>
 				<span className='px-3 py-1 rounded-full glass text-xs font-medium'>
-					{category}
+					{product.category}
 				</span>
-				{badge && (
+				{product.badge && (
 					<span className='px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-semibold'>
-						{badge}
+						{product.badge}
 					</span>
 				)}
 			</div>
@@ -52,7 +70,7 @@ export function ProductInfo({
 			{/* Product Name */}
 			<h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
 				<span className='bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent'>
-					{name}
+					{product.name}
 				</span>
 			</h1>
 
@@ -63,28 +81,28 @@ export function ProductInfo({
 						<Star
 							key={i}
 							className={`w-5 h-5 ${
-								i < Math.floor(rating)
+								i < Math.floor(product.rating)
 									? 'fill-yellow-400 text-yellow-400'
 									: 'text-gray-300'
 							}`}
 						/>
 					))}
 					<span className='ml-2 text-sm text-muted-foreground'>
-						({rating})
+						({product.rating})
 					</span>
 				</div>
 				<span className='px-3 py-1 rounded-full bg-green-500/20 text-green-600 text-sm font-medium'>
-					{stock}
+					{product.stock}
 				</span>
 			</div>
 
 			{/* Price */}
 			<div className='py-4 border-y border-border'>
-				<p className='text-4xl font-bold text-primary'>{price}</p>
+				<p className='text-4xl font-bold text-primary'>{product.price}</p>
 			</div>
 
 			{/* Description */}
-			<p className='text-muted-foreground leading-relaxed'>{description}</p>
+			<p className='text-muted-foreground leading-relaxed'>{product.description}</p>
 
 			{/* Quantity Selector */}
 			<div className='space-y-3'>
@@ -114,10 +132,22 @@ export function ProductInfo({
 			<div className='flex gap-3'>
 				<Button
 					onClick={handleAddToCart}
-					className='flex-1 flex items-center justify-center gap-2 py-6 text-base font-semibold'
+					disabled={isAdding}
+					className={`flex-1 flex items-center justify-center gap-2 py-6 text-base font-semibold group/btn relative overflow-hidden ${
+						isAdding ? 'bg-green-600 hover:bg-green-600' : ''
+					}`}
 					size='lg'>
-					<ShoppingCart className='w-5 h-5' />
-					Thêm Vào Giỏ
+					{isAdding ? (
+						<>
+							<Check className='w-5 h-5 animate-bounce-in' />
+							Đã Thêm!
+						</>
+					) : (
+						<>
+							<ShoppingCart className='w-5 h-5 group-hover/btn:scale-110 transition-transform' />
+							Thêm Vào Giỏ
+						</>
+					)}
 				</Button>
 				<Button
 					variant='outline'
@@ -132,9 +162,14 @@ export function ProductInfo({
 				<Button
 					variant='outline'
 					size='lg'
-					className='p-6'
+					onClick={handleCopyLink}
+					className={`p-6 ${isCopied ? 'bg-green-600 hover:bg-green-600 text-white' : ''}`}
 					aria-label='Chia sẻ'>
-					<Share2 className='w-5 h-5' />
+					{isCopied ? (
+						<Check className='w-5 h-5 animate-bounce-in' />
+					) : (
+						<Share2 className='w-5 h-5' />
+					)}
 				</Button>
 			</div>
 
@@ -153,6 +188,20 @@ export function ProductInfo({
 					<span className='font-medium'>2-3 ngày</span>
 				</div>
 			</div>
+
+			{/* Toast Notification - Copy Link */}
+			<Toast
+				message='Đã copy link sản phẩm!'
+				isVisible={showToast}
+				onClose={() => setShowToast(false)}
+			/>
+
+			{/* Toast Notification - Add to Cart */}
+			<Toast
+				message={`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`}
+				isVisible={showAddToCartToast}
+				onClose={() => setShowAddToCartToast(false)}
+			/>
 		</div>
 	);
 }

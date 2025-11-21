@@ -5,23 +5,25 @@ import { Leaf, Menu, Search, ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
 
 import { useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { totalItems } = useCartStore();
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-white/20 glass">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2 group cursor-pointer">
+          <Link href="/" className="flex items-center gap-2 group cursor-pointer">
             <div className="flex items-center justify-center w-10 h-10 rounded-full glass-button group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
               <Leaf className="w-6 h-6 text-primary drop-shadow-lg" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent drop-shadow-sm">
               Kairo Plants
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
@@ -41,19 +43,21 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
-              <Search className="w-5 h-5" />
-            </Button>
             
             <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
               <User className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full glass-button text-[10px] font-bold text-primary animate-pulse-subtle">
-                3
-              </span>
-            </Button>
+            
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
+                <ShoppingCart className="w-5 h-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold animate-bounce-in">
+                    {totalItems > 99 ? '99+' : totalItems}
+                  </span>
+                )}
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
