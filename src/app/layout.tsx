@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,9 +19,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     default: "Kairo Plants - Cửa Hàng Cây Xanh | Mang Thiên Nhiên Vào Nhà",
-    template: "%s | Kairo Plants"
+    template: "%s | Kairo Plants",
   },
-  description: "Cửa hàng cây xanh Kairo Plants - Chuyên cung cấp cây cảnh, cây văn phòng, cây trong nhà, cây phong thủy. Giao hàng toàn quốc, bảo hành 30 ngày. Hơn 500 loại cây xanh chất lượng cao.",
+  description:
+    "Cửa hàng cây xanh Kairo Plants - Chuyên cung cấp cây cảnh, cây văn phòng, cây trong nhà, cây phong thủy. Giao hàng toàn quốc, bảo hành 30 ngày. Hơn 500 loại cây xanh chất lượng cao.",
   keywords: [
     "cây xanh",
     "cây cảnh",
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
     "mua cây online",
     "shop cây xanh",
     "cây lọc không khí",
-    "cây sen đá"
+    "cây sen đá",
   ],
   authors: [{ name: "Kairo Plants" }],
   creator: "Kairo Plants",
@@ -46,7 +48,8 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "Kairo Plants",
     title: "Kairo Plants - Cửa Hàng Cây Xanh Uy Tín",
-    description: "Khám phá bộ sưu tập cây xanh đa dạng. Giao hàng nhanh, bảo hành 30 ngày, hướng dẫn chăm sóc tận tình.",
+    description:
+      "Khám phá bộ sưu tập cây xanh đa dạng. Giao hàng nhanh, bảo hành 30 ngày, hướng dẫn chăm sóc tận tình.",
     images: [
       {
         url: "/og-image.jpg",
@@ -86,7 +89,8 @@ const jsonLd = {
   "@type": "Store",
   "@id": "https://kairoplants.com",
   name: "Kairo Plants",
-  description: "Cửa hàng cây xanh chuyên nghiệp, cung cấp đa dạng loại cây cảnh và phụ kiện chăm sóc cây",
+  description:
+    "Cửa hàng cây xanh chuyên nghiệp, cung cấp đa dạng loại cây cảnh và phụ kiện chăm sóc cây",
   url: "https://kairoplants.com",
   logo: "https://kairoplants.com/logo.png",
   image: "https://kairoplants.com/og-image.jpg",
@@ -150,7 +154,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

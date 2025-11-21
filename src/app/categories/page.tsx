@@ -1,210 +1,218 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
-import { Header, Footer } from '@/shared/layout';
-import { ScrollIndicator } from '@/shared/ui';
+import { useState, useMemo } from "react";
+import { Header, Footer } from "@/shared/layout";
+import { ScrollIndicator } from "@/shared/ui";
 import {
-	Breadcrumbs,
-	CategoryHeader,
-	ProductFilters,
-	ProductGrid,
-	ProductSort,
-	type SortOption,
-} from '@/features/categories';
-import { mockProducts } from '@/features/categories';
-import { Filter, Search } from 'lucide-react';
-import { Button } from '@/shared/ui';
+  Breadcrumbs,
+  CategoryHeader,
+  ProductFilters,
+  ProductGrid,
+  ProductSort,
+  type SortOption,
+} from "@/features/categories";
+import { useProducts } from "@/hooks/useProducts";
+import { Filter, Search, Loader2 } from "lucide-react";
+import { Button } from "@/shared/ui";
 
 export default function CategoriesPage() {
-	// Filter states
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
-	const [minRating, setMinRating] = useState<number>(0);
-	const [sortOption, setSortOption] = useState<SortOption>('default');
-	const [searchQuery, setSearchQuery] = useState<string>('');
-	const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  // Fetch products from Supabase
+  const { data: products = [], isLoading, error } = useProducts();
 
-	// Filter and sort products
-	const filteredAndSortedProducts = useMemo(() => {
-		let filtered = [...mockProducts];
+  // Filter states
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
+  const [minRating, setMinRating] = useState<number>(0);
+  const [sortOption, setSortOption] = useState<SortOption>("default");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-		// Filter by search query
-		if (searchQuery.trim()) {
-			const query = searchQuery.toLowerCase();
-			filtered = filtered.filter((product) =>
-				product.name.toLowerCase().includes(query) ||
-				product.category.toLowerCase().includes(query) ||
-				product.description.toLowerCase().includes(query)
-			);
-		}
+  // Filter and sort products
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = [...products];
 
-		// Filter by category
-		if (selectedCategories.length > 0) {
-			filtered = filtered.filter((product) =>
-				selectedCategories.includes(product.category)
-			);
-		}
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query)
+      );
+    }
 
-		// Filter by price range
-		filtered = filtered.filter(
-			(product) =>
-				product.priceValue >= priceRange[0] &&
-				product.priceValue <= priceRange[1]
-		);
+    // Filter by category
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedCategories.includes(product.category)
+      );
+    }
 
-		// Filter by rating
-		if (minRating > 0) {
-			filtered = filtered.filter((product) => product.rating >= minRating);
-		}
+    // Filter by price range
+    filtered = filtered.filter(
+      (product) =>
+        product.priceValue >= priceRange[0] &&
+        product.priceValue <= priceRange[1]
+    );
 
-		// Sort products
-		switch (sortOption) {
-			case 'price-asc':
-				filtered.sort((a, b) => a.priceValue - b.priceValue);
-				break;
-			case 'price-desc':
-				filtered.sort((a, b) => b.priceValue - a.priceValue);
-				break;
-			case 'rating-desc':
-				filtered.sort((a, b) => b.rating - a.rating);
-				break;
-			case 'name-asc':
-				filtered.sort((a, b) => a.name.localeCompare(b.name));
-				break;
-			case 'name-desc':
-				filtered.sort((a, b) => b.name.localeCompare(a.name));
-				break;
-			default:
-				// Keep default order
-				break;
-		}
+    // Filter by rating
+    if (minRating > 0) {
+      filtered = filtered.filter((product) => product.rating >= minRating);
+    }
 
-		return filtered;
-	}, [searchQuery, selectedCategories, priceRange, minRating, sortOption]);
+    // Sort products
+    switch (sortOption) {
+      case "price-asc":
+        filtered.sort((a, b) => a.priceValue - b.priceValue);
+        break;
+      case "price-desc":
+        filtered.sort((a, b) => b.priceValue - a.priceValue);
+        break;
+      case "rating-desc":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case "name-asc":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        // Keep default order
+        break;
+    }
 
-	const handleResetFilters = () => {
-		setSearchQuery('');
-		setSelectedCategories([]);
-		setPriceRange([0, 1000000]);
-		setMinRating(0);
-		setSortOption('default');
-	};
+    return filtered;
+  }, [
+    products,
+    searchQuery,
+    selectedCategories,
+    priceRange,
+    minRating,
+    sortOption,
+  ]);
 
-	return (
-		<div className='min-h-screen'>
-			<Header />
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategories([]);
+    setPriceRange([0, 1000000]);
+    setMinRating(0);
+    setSortOption("default");
+  };
 
-			<main className='container mx-auto px-4 pt-28 pb-16'>
-				{/* Breadcrumbs */}
-				<Breadcrumbs
-					items={[{ label: 'Danh Mục Sản Phẩm', href: '/categories' }]}
-				/>
+  return (
+    <div className="min-h-screen">
+      <Header />
 
-				{/* Page Header */}
-				<CategoryHeader
-					title='Danh Mục Sản Phẩm'
-					productCount={filteredAndSortedProducts.length}
-				/>
+      <main className="container mx-auto px-4 pt-28 pb-16">
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          items={[{ label: "Danh Mục Sản Phẩm", href: "/categories" }]}
+        />
 
-				{/* Mobile Toolbar */}
-				<div className='lg:hidden mb-6 space-y-4'>
-					{/* Search Bar */}
-					<div className='relative'>
-						<Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
-						<input
-							type='text'
-							placeholder='Tìm kiếm sản phẩm...'
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							className='w-full pl-10 pr-4 py-2 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all'
-						/>
-					</div>
-					{/* Filter and Sort */}
-					<div className='flex items-center justify-between gap-2'>
-						<Button
-							onClick={() => setIsMobileFilterOpen(true)}
-							className='flex items-center gap-2'
-							variant='outline'>
-							<Filter className='w-4 h-4' />
-							Bộ Lọc
-						</Button>
-						<ProductSort value={sortOption} onChange={setSortOption} />
-					</div>
-				</div>
+        {/* Page Header */}
+        <CategoryHeader
+          title="Danh Mục Sản Phẩm"
+          productCount={filteredAndSortedProducts.length}
+        />
 
-				{/* Main Content */}
-				<div className='grid grid-cols-1 lg:grid-cols-4 gap-8'>
-					{/* Desktop Filters Sidebar */}
-					<aside className='hidden lg:block sticky top-28 self-start'>
-						<ProductFilters
-							selectedCategories={selectedCategories}
-							onCategoryChange={setSelectedCategories}
-							priceRange={priceRange}
-							onPriceRangeChange={setPriceRange}
-							minRating={minRating}
-							onMinRatingChange={setMinRating}
-							onReset={handleResetFilters}
-						/>
-					</aside>
+        {/* Mobile Toolbar */}
+        <div className="lg:hidden mb-6 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            />
+          </div>
+          {/* Filter and Sort */}
+          <div className="flex items-center justify-between gap-2">
+            <Button
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="flex items-center gap-2"
+              variant="outline"
+            >
+              <Filter className="w-4 h-4" />
+              Bộ Lọc
+            </Button>
+            <ProductSort value={sortOption} onChange={setSortOption} />
+          </div>
+        </div>
 
-					{/* Products Grid */}
-					<div className='lg:col-span-3'>
-						{/* Desktop Toolbar */}
-						<div className='hidden lg:flex justify-between items-center gap-4 mb-6'>
-							{/* Search Bar */}
-							<div className='relative flex-1 max-w-md'>
-								<Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
-								<input
-									type='text'
-									placeholder='Tìm kiếm sản phẩm...'
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-									className='w-full pl-10 pr-4 py-2 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all'
-								/>
-							</div>
-							{/* Sort */}
-							<ProductSort value={sortOption} onChange={setSortOption} />
-						</div>
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Desktop Filters Sidebar */}
+          <aside className="hidden lg:block sticky top-28 self-start">
+            <ProductFilters
+              selectedCategories={selectedCategories}
+              onCategoryChange={setSelectedCategories}
+              priceRange={priceRange}
+              onPriceRangeChange={setPriceRange}
+              minRating={minRating}
+              onMinRatingChange={setMinRating}
+              onReset={handleResetFilters}
+            />
+          </aside>
 
-						<ProductGrid
-						products={filteredAndSortedProducts}
-						viewMode='grid'
-					/>
-					</div>
-				</div>
+          {/* Products Grid */}
+          <div className="lg:col-span-3">
+            {/* Desktop Toolbar */}
+            <div className="hidden lg:flex justify-between items-center gap-4 mb-6">
+              {/* Search Bar */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm sản phẩm..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                />
+              </div>
+              {/* Sort */}
+              <ProductSort value={sortOption} onChange={setSortOption} />
+            </div>
 
-				{/* Mobile Filter Drawer */}
-				{isMobileFilterOpen && (
-					<>
-						{/* Backdrop */}
-						<div
-							className='fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden animate-fade-in'
-							onClick={() => setIsMobileFilterOpen(false)}
-						/>
+            <ProductGrid products={filteredAndSortedProducts} viewMode="grid" />
+          </div>
+        </div>
 
-						{/* Drawer */}
-					<div className='fixed inset-y-0 left-0 w-80 max-w-[85vw] glass border-r border-border z-50 lg:hidden animate-slide-in-left overflow-y-auto'>
-							<div className='p-6'>
-								<ProductFilters
-									selectedCategories={selectedCategories}
-									onCategoryChange={setSelectedCategories}
-									priceRange={priceRange}
-									onPriceRangeChange={setPriceRange}
-									minRating={minRating}
-									onMinRatingChange={setMinRating}
-									onReset={handleResetFilters}
-									isMobile={true}
-									onClose={() => setIsMobileFilterOpen(false)}
-								/>
-							</div>
-						</div>
-					</>
-				)}
-			</main>
+        {/* Mobile Filter Drawer */}
+        {isMobileFilterOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+              onClick={() => setIsMobileFilterOpen(false)}
+            />
 
-			<Footer />
-			<ScrollIndicator />
-		</div>
-	);
+            {/* Drawer */}
+            <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] glass border-r border-border z-50 lg:hidden animate-slide-in-left overflow-y-auto">
+              <div className="p-6">
+                <ProductFilters
+                  selectedCategories={selectedCategories}
+                  onCategoryChange={setSelectedCategories}
+                  priceRange={priceRange}
+                  onPriceRangeChange={setPriceRange}
+                  minRating={minRating}
+                  onMinRatingChange={setMinRating}
+                  onReset={handleResetFilters}
+                  isMobile={true}
+                  onClose={() => setIsMobileFilterOpen(false)}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </main>
+
+      <Footer />
+      <ScrollIndicator />
+    </div>
+  );
 }
-   
