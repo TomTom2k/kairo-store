@@ -5,7 +5,8 @@ import {
   getAverageRating,
   getReviewCount,
 } from "@/api/services/reviews.service";
-import type { Review, CreateReview } from "@/lib/supabase/types";
+import type { CreateReview } from "@/lib/supabase/types";
+import { adaptSupabaseReviews } from "@/lib/adapters/review.adapter";
 import { productKeys } from "./useProducts";
 
 // Query keys
@@ -25,7 +26,10 @@ export const reviewKeys = {
 export function useReviews(productId: number) {
   return useQuery({
     queryKey: reviewKeys.list(productId),
-    queryFn: () => getReviewsByProductId(productId),
+    queryFn: async () => {
+      const supabaseReviews = await getReviewsByProductId(productId);
+      return adaptSupabaseReviews(supabaseReviews);
+    },
     enabled: !!productId,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });

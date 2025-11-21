@@ -66,6 +66,9 @@ export type CreateReview = z.infer<typeof CreateReviewSchema>;
 export type Order = z.infer<typeof OrderSchema>;
 export type CreateOrder = z.infer<typeof CreateOrderSchema>;
 
+export type CreateProduct = Omit<Product, "id" | "created_at" | "updated_at">;
+export type UpdateProduct = Partial<CreateProduct>;
+
 // Database types for Supabase
 export type Database = {
   public: {
