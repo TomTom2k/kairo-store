@@ -2,6 +2,8 @@
 
 import { Button } from "@/shared/ui";
 import { Leaf, Menu, Search, ShoppingCart, User } from "lucide-react";
+import Link from "next/link";
+
 import { useState } from "react";
 
 export function Header() {
@@ -23,21 +25,18 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
               Trang Chủ
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Sản Phẩm
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            </Link>
+              <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors">
               Danh Mục
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            </Link>
+            <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
               Về Chúng Tôi
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            </Link>
+            <Link href="/contact" className="text-sm font-medium hover:text-primary transition-colors">
               Liên Hệ
-            </a>
+             </Link>
           </nav>
 
           {/* Actions */}
