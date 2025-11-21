@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui';
 import { Heart, ShoppingCart, Star, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { TiltCard, ShimmerEffect } from '@/shared/animations';
 
@@ -31,9 +32,15 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [isAdding, setIsAdding] = useState(false);
 
-	const handleAddToCart = () => {
+	const handleAddToCart = (e: React.MouseEvent) => {
+		e.preventDefault(); // Prevent navigation
 		setIsAdding(true);
 		setTimeout(() => setIsAdding(false), 600);
+	};
+
+	const handleFavoriteClick = (e: React.MouseEvent) => {
+		e.preventDefault(); // Prevent navigation
+		setIsFavorite(!isFavorite);
 	};
 
 	// Different animations for variety
@@ -51,65 +58,66 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
 
 	return (
 		<TiltCard intensity={10}>
-			<Card
-				className={`group relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl glass-card ${animationClass}`}
-				style={{ animationDelay: `${animationDelay}s` }}>
-				{/* Schema.org markup */}
-				<meta itemProp='name' content={plant.name} />
-				<meta itemProp='description' content={plant.description} />
-				<meta itemProp='category' content={plant.category} />
+			<Link href={`/products/${plant.id}`} className='block'>
+				<Card
+					className={`group relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl glass-card ${animationClass}`}
+					style={{ animationDelay: `${animationDelay}s` }}>
+					{/* Schema.org markup */}
+					<meta itemProp='name' content={plant.name} />
+					<meta itemProp='description' content={plant.description} />
+					<meta itemProp='category' content={plant.category} />
 
-				<div
-					itemProp='offers'
-					itemScope
-					itemType='https://schema.org/Offer'>
-					<meta itemProp='price' content={String(plant.priceValue)} />
-					<meta itemProp='priceCurrency' content='VND' />
-					<meta
-						itemProp='availability'
-						content='https://schema.org/InStock'
-					/>
-				</div>
-
-				<div
-					itemProp='aggregateRating'
-					itemScope
-					itemType='https://schema.org/AggregateRating'>
-					<meta
-						itemProp='ratingValue'
-						content={String(plant.rating)}
-					/>
-					<meta itemProp='bestRating' content='5' />
-				</div>
-
-				{/* Shimmer effect on hover */}
-				<ShimmerEffect className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10' />
-
-				{/* Badge */}
-				{plant.badge && (
-					<div className='absolute top-4 left-4 z-20 px-3 py-1 bg-gradient-to-r from-primary to-primary-light text-primary-foreground text-xs font-semibold rounded-full shadow-lg animate-bounce-in backdrop-blur-sm'>
-						<span className='flex items-center gap-1'>
-							<Sparkles className='w-3 h-3 animate-pulse' />
-							{plant.badge}
-						</span>
+					<div
+						itemProp='offers'
+						itemScope
+						itemType='https://schema.org/Offer'>
+						<meta itemProp='price' content={String(plant.priceValue)} />
+						<meta itemProp='priceCurrency' content='VND' />
+						<meta
+							itemProp='availability'
+							content='https://schema.org/InStock'
+						/>
 					</div>
-				)}
 
-				{/* Favorite Button - Interactive */}
-				<button
-					onClick={() => setIsFavorite(!isFavorite)}
-					className='absolute top-4 right-4 z-20 p-2 rounded-full glass transition-all duration-300 hover:scale-110 group/heart hover-glow'
-					aria-label={
-						isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'
-					}>
-					<Heart
-						className={`w-5 h-5 transition-all duration-300 ${
-							isFavorite
-								? 'text-red-500 fill-red-500 animate-bounce-in'
-								: 'text-muted-foreground group-hover/heart:text-red-500 group-hover/heart:scale-110'
-						}`}
-					/>
-				</button>
+					<div
+						itemProp='aggregateRating'
+						itemScope
+						itemType='https://schema.org/AggregateRating'>
+						<meta
+							itemProp='ratingValue'
+							content={String(plant.rating)}
+						/>
+						<meta itemProp='bestRating' content='5' />
+					</div>
+
+					{/* Shimmer effect on hover */}
+					<ShimmerEffect className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10' />
+
+					{/* Badge */}
+					{plant.badge && (
+						<div className='absolute top-4 left-4 z-20 px-3 py-1 bg-gradient-to-r from-primary to-primary-light text-primary-foreground text-xs font-semibold rounded-full shadow-lg animate-bounce-in backdrop-blur-sm'>
+							<span className='flex items-center gap-1'>
+								<Sparkles className='w-3 h-3 animate-pulse' />
+								{plant.badge}
+							</span>
+						</div>
+					)}
+
+					{/* Favorite Button - Interactive */}
+					<button
+						onClick={handleFavoriteClick}
+						className='absolute top-4 right-4 z-20 p-2 rounded-full glass transition-all duration-300 hover:scale-110 group/heart hover-glow'
+						aria-label={
+							isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'
+						}>
+						<Heart
+							className={`w-5 h-5 transition-all duration-300 ${
+								isFavorite
+									? 'text-red-500 fill-red-500 animate-bounce-in'
+									: 'text-muted-foreground group-hover/heart:text-red-500 group-hover/heart:scale-110'
+							}`}
+						/>
+					</button>
 
 				{/* Image Container với multiple effects */}
 				<div className='relative h-64 overflow-hidden bg-gradient-to-br from-accent/20 to-primary/5'>
@@ -188,6 +196,7 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
 				{/* Glow effect on hover */}
 				<div className='absolute inset-0 -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-gradient-to-r from-primary/20 to-primary-light/20' />
 			</Card>
-		</TiltCard>
-	);
+		</Link>
+	</TiltCard>
+);
 }
