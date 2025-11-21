@@ -1,5 +1,5 @@
-import { BenefitCard } from "@/modules/shared";
-import { ScrollReveal, ParallaxSection } from "@/modules/shared";
+import { BenefitCard } from "@/shared/components/cards";
+import { ScrollReveal, ParallaxSection } from "@/shared/animations";
 
 const benefits = [
   {
@@ -41,8 +41,8 @@ export function Benefits() {
     >
       {/* Decorative background với parallax */}
       <div className="absolute inset-0 bg-gradient-to-b from-accent/20 via-transparent to-accent/20 pointer-events-none" aria-hidden="true" />
-      <ParallaxSection speed={0.8} className="absolute top-20 left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
-      <ParallaxSection speed={0.6} className="absolute bottom-20 right-10 w-64 h-64 bg-primary-light/5 rounded-full blur-3xl" />
+      <div className="absolute top-20 left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="absolute bottom-20 right-10 w-64 h-64 bg-primary-light/5 rounded-full blur-3xl" aria-hidden="true" />
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header với parallax layers */}

@@ -5,6 +5,7 @@ Website bán cây xanh hiện đại với animations đẹp mắt và được 
 ## ✨ Tính Năng
 
 ### 🎨 Giao Diện
+
 - ✅ Theme màu xanh lá chủ đạo (có thể tùy chỉnh)
 - ✅ Animations 3D mượt mà với CSS
 - ✅ Responsive design (mobile-first)
@@ -12,6 +13,7 @@ Website bán cây xanh hiện đại với animations đẹp mắt và được 
 - ✅ Glassmorphism effects
 
 ### 🚀 Hiệu Năng
+
 - ✅ Server Components (Next.js 15)
 - ✅ Client Components chỉ cho interactive parts
 - ✅ Image optimization với Next.js Image
@@ -19,6 +21,7 @@ Website bán cây xanh hiện đại với animations đẹp mắt và được 
 - ✅ CSS animations (không dùng heavy libraries)
 
 ### 🔍 SEO
+
 - ✅ Metadata đầy đủ
 - ✅ Structured Data (Schema.org)
 - ✅ Sitemap.xml tự động
@@ -30,6 +33,7 @@ Website bán cây xanh hiện đại với animations đẹp mắt và được 
 ### 🎯 Components
 
 #### Server Components (SEO-friendly)
+
 ```
 src/components/sections/
 ├── Hero.tsx              # Hero section
@@ -40,6 +44,7 @@ src/components/sections/
 ```
 
 #### Client Components (Interactive)
+
 ```
 src/components/interactive/
 ├── HeroButtons.tsx       # CTA buttons
@@ -53,6 +58,7 @@ src/components/animations/
 ```
 
 #### Layout Components
+
 ```
 src/components/layout/
 ├── Header.tsx            # Navigation header
@@ -76,7 +82,7 @@ File: `src/app/globals.css`
 --plant-primary: oklch(0.55 0.15 290);
 
 /* Cam */
---plant-primary: oklch(0.60 0.18 40);
+--plant-primary: oklch(0.6 0.18 40);
 ```
 
 Xem chi tiết: [THEME-CONFIG.md](./THEME-CONFIG.md)
@@ -95,12 +101,18 @@ kairo-store/web/
 │   │   ├── globals.css        # Global styles & animations
 │   │   ├── sitemap.ts         # Auto-generated sitemap
 │   │   └── robots.ts          # Robots.txt
-│   ├── components/
+│   ├── features/              # Feature modules (độc lập)
+│   │   └── home/              # Home feature
+│   │       ├── components/    # Components của home
+│   │       └── index.ts       # Public API
+│   ├── shared/                # Shared resources
+│   │   ├── components/        # Reusable components
+│   │   │   ├── cards/         # Card components
+│   │   │   └── forms/         # Form components
+│   │   ├── ui/                # shadcn/ui components
 │   │   ├── animations/        # Animation components
-│   │   ├── interactive/       # Client components
 │   │   ├── layout/            # Layout components
-│   │   ├── sections/          # Page sections
-│   │   └── ui/                # shadcn components
+│   │   └── index.ts
 │   └── lib/
 │       └── utils.ts           # Utility functions
 ├── THEME-CONFIG.md            # Hướng dẫn tùy chỉnh theme
@@ -127,6 +139,7 @@ pnpm start
 ```
 
 ### Development
+
 ```bash
 # Development với hot reload
 pnpm dev
@@ -135,6 +148,7 @@ pnpm dev
 ```
 
 ### Linting
+
 ```bash
 pnpm lint
 ```
@@ -142,6 +156,7 @@ pnpm lint
 ## 🎯 SEO Checklist
 
 ### Đã Hoàn Thành ✅
+
 - [x] Server/Client components tách biệt
 - [x] Metadata & Open Graph tags
 - [x] JSON-LD Structured Data
@@ -153,6 +168,7 @@ pnpm lint
 - [x] PWA manifest.json
 
 ### Cần Làm Sau Deploy 📝
+
 - [ ] Google Search Console verification
 - [ ] Google Analytics setup
 - [ ] Test Rich Snippets
@@ -164,6 +180,7 @@ Xem chi tiết: [SEO-GUIDE.md](./SEO-GUIDE.md)
 ## 🎨 Design Features
 
 ### Animations
+
 - **Floating Leaves:** CSS keyframe animations
 - **3D Plant Pot:** CSS transforms với perspective
 - **Hover Effects:** Smooth transitions
@@ -171,6 +188,7 @@ Xem chi tiết: [SEO-GUIDE.md](./SEO-GUIDE.md)
 - **Gradient Animations:** Dynamic color shifts
 
 ### Responsive Breakpoints
+
 - Mobile: < 768px
 - Tablet: 768px - 1024px
 - Desktop: > 1024px

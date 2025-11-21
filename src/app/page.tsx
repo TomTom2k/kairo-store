@@ -1,5 +1,6 @@
-import { Hero, FeaturedPlants, Categories, Benefits, Newsletter } from '@/modules/home';
-import { Header, Footer, ScrollIndicator } from '@/modules/shared';
+import { Hero, FeaturedPlants, Categories, Benefits, Newsletter } from '@/features/home';
+import { Header, Footer } from '@/shared/layout';
+import { ScrollIndicator } from '@/shared/ui';
 
 export default function Home() {
 	return (

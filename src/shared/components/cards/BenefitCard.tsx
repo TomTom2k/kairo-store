@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/modules/shared";
+import { Card, CardContent } from "@/shared/ui";
 import { Droplets, Heart, Shield, Truck } from "lucide-react";
 
 // Map icon names to components trong client component
@@ -77,4 +77,3 @@ export function BenefitCard({ benefit, index }: { benefit: Benefit; index: numbe
     </article>
   );
 }
-

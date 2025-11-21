@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/modules/shared";
+import { Button } from "@/shared/ui";
 import { Facebook, Instagram, Leaf, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 
 export function Footer() {

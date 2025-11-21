@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/modules/shared";
+import { Button } from "@/shared/ui";
 import { Leaf, Menu, Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
 

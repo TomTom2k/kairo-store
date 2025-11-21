@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/modules/shared";
+import { Button } from "@/shared/ui";
 import { ShoppingCart, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { MagneticButton } from "@/modules/shared";
+import { MagneticButton } from "@/shared/animations";
 
 // Client Component - Chỉ phần interactive
 export function HeroButtons() {

@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react';
-import { FloatingLeaves, GlowingOrb, WaveBackground } from '@/modules/shared';
-import { HeroButtons } from '../widgets/HeroButtons';
+import { FloatingLeaves, GlowingOrb, WaveBackground } from '@/shared/animations';
+import { HeroButtons } from './HeroButtons';
 
 // Server Component - Tốt cho SEO
 export function Hero() {

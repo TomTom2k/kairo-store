@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-import { PlantCard } from '@/modules/shared';
-import { ScrollReveal, ParallaxSection } from '@/modules/shared';
+import { PlantCard } from '@/shared/components/cards';
+import { ScrollReveal, ParallaxSection } from '@/shared/animations';
 
 const plants = [
 	{
@@ -63,14 +63,8 @@ export function FeaturedPlants() {
 			itemScope
 			itemType='https://schema.org/ItemList'>
 			{/* Parallax background decorations */}
-			<ParallaxSection
-				speed={0.8}
-				className='absolute top-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl'
-			/>
-			<ParallaxSection
-				speed={0.6}
-				className='absolute bottom-40 left-20 w-80 h-80 bg-primary-light/5 rounded-full blur-3xl'
-			/>
+			<div className='absolute top-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl' aria-hidden="true" />
+			<div className='absolute bottom-40 left-20 w-80 h-80 bg-primary-light/5 rounded-full blur-3xl' aria-hidden="true" />
 
 			<div className='container mx-auto px-4 relative z-10'>
 				{/* Section Header với parallax layers */}

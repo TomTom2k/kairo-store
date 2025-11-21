@@ -1,6 +1,6 @@
-import { NewsletterForm } from "@/modules/shared";
+import { NewsletterForm } from "@/shared/components/forms";
 import { Mail, Sparkles } from "lucide-react";
-import { ScrollReveal, ParallaxSection } from "@/modules/shared";
+import { ScrollReveal, ParallaxSection } from "@/shared/animations";
 
 // Server Component với semantic HTML
 export function Newsletter() {
@@ -9,9 +9,9 @@ export function Newsletter() {
       className="relative py-16 md:py-20 bg-accent/30 overflow-hidden"
       aria-labelledby="newsletter-heading"
     >
-      {/* Parallax background elements */}
-      <ParallaxSection speed={0.8} className="absolute top-10 right-10 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-      <ParallaxSection speed={0.6} className="absolute bottom-10 left-10 w-64 h-64 bg-primary-light/10 rounded-full blur-3xl" />
+      {/* Background elements */}
+      <div className="absolute top-10 right-10 w-80 h-80 bg-primary/10 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="absolute bottom-10 left-10 w-64 h-64 bg-primary-light/10 rounded-full blur-3xl" aria-hidden="true" />
 
       <div className="container mx-auto px-4 relative z-10">
         <ScrollReveal>

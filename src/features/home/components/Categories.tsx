@@ -1,5 +1,5 @@
-import { CategoryCard } from "@/modules/shared";
-import { ScrollReveal, ParallaxSection } from "@/modules/shared";
+import { CategoryCard } from "@/shared/components/cards";
+import { ScrollReveal, ParallaxSection } from "@/shared/animations";
 import { Leaf } from "lucide-react";
 
 // Chỉ truyền data, không truyền icon components
@@ -75,13 +75,13 @@ export function Categories() {
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Parallax decorative leaves */}
-      <ParallaxSection speed={0.9} className="absolute top-10 left-10 opacity-5">
+      {/* Decorative leaves */}
+      <div className="absolute top-10 left-10 opacity-5" aria-hidden="true">
         <Leaf className="w-48 h-48 text-primary" style={{ transform: "rotate(45deg)" }} />
-      </ParallaxSection>
-      <ParallaxSection speed={0.7} className="absolute bottom-10 right-10 opacity-5">
+      </div>
+      <div className="absolute bottom-10 right-10 opacity-5" aria-hidden="true">
         <Leaf className="w-40 h-40 text-primary" style={{ transform: "rotate(-30deg)" }} />
-      </ParallaxSection>
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header với parallax layers */}

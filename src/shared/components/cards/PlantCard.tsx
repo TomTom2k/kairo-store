@@ -8,11 +8,11 @@ import {
 	CardHeader,
 	CardTitle,
 	Button,
-} from '@/modules/shared';
+} from '@/shared/ui';
 import { Heart, ShoppingCart, Star, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { TiltCard, ShimmerEffect } from '@/modules/shared';
+import { TiltCard, ShimmerEffect } from '@/shared/animations';
 
 interface Plant {
 	id: number;
