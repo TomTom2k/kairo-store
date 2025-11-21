@@ -14,8 +14,7 @@ export interface Product {
   description: string;
   badge: string | null;
   category: string;
-  stock: string;
-  inStock: boolean;
+  quantity: number;
 }
 
 /**
@@ -34,8 +33,7 @@ export function adaptSupabaseProduct(
     description: supabaseProduct.description,
     badge: supabaseProduct.badge,
     category: supabaseProduct.category,
-    stock: supabaseProduct.stock,
-    inStock: supabaseProduct.in_stock,
+    quantity: supabaseProduct.quantity,
   };
 }
 
@@ -64,7 +62,6 @@ export function toSupabaseProduct(
     description: product.description,
     badge: product.badge,
     category: product.category,
-    stock: product.stock,
-    in_stock: product.inStock,
+    quantity: product.quantity,
   };
 }

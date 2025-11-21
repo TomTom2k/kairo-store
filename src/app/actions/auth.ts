@@ -18,8 +18,11 @@ export async function setAdminSession(password: string) {
   return { success: false };
 }
 
+import { revalidatePath } from "next/cache";
+
 export async function logoutAdmin() {
   (await cookies()).delete(SESSION_COOKIE);
+  revalidatePath("/", "layout");
   return { success: true };
 }
 

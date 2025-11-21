@@ -11,8 +11,7 @@ export const ProductSchema = z.object({
   description: z.string(),
   badge: z.string().nullable(),
   category: z.string(),
-  stock: z.string(),
-  in_stock: z.boolean(),
+  quantity: z.number().int().min(0),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });

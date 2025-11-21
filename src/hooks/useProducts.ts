@@ -32,8 +32,14 @@ export function useProducts() {
   return useQuery({
     queryKey: productKeys.lists(),
     queryFn: async () => {
-      const supabaseProducts = await getProducts();
-      return adaptSupabaseProducts(supabaseProducts);
+      const response = await fetch("/api/products");
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Failed to fetch products");
+      }
+
+      return result.data as Product[];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -46,8 +52,17 @@ export function useProduct(id: number) {
   return useQuery({
     queryKey: productKeys.detail(id),
     queryFn: async () => {
-      const supabaseProduct = await getProductById(id);
-      return supabaseProduct ? adaptSupabaseProduct(supabaseProduct) : null;
+      const response = await fetch(`/api/products/${id}`);
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(result.error || "Failed to fetch product");
+      }
+
+      return result.data as Product;
     },
     enabled: !!id, // Only run if id is provided
     staleTime: 5 * 60 * 1000, // 5 minutes

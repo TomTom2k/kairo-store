@@ -38,35 +38,10 @@ export function ProductForm({
   const [description, setDescription] = useState(
     initialData?.description || ""
   );
-  const [stock, setStock] = useState(initialData?.stock || "Còn hàng");
-  const [inStock, setInStock] = useState(initialData?.inStock ?? true);
+  const [quantity, setQuantity] = useState(
+    initialData?.quantity?.toString() || "0"
+  );
   const [badge, setBadge] = useState(initialData?.badge || "");
-
-  const createMutation = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-      router.push("/admin/products");
-      router.refresh();
-    },
-    onError: (err: Error) => {
-      setError(err.message);
-      setIsSubmitting(false);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: (data: any) => updateProduct(initialData!.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-      router.push("/admin/products");
-      router.refresh();
-    },
-    onError: (err: Error) => {
-      setError(err.message);
-      setIsSubmitting(false);
-    },
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,18 +57,37 @@ export function ProductForm({
         image,
         description,
         category,
-        stock,
-        in_stock: inStock,
+        quantity: parseInt(quantity),
         badge: badge || null,
       };
 
-      if (isEditing && initialData) {
-        await updateMutation.mutateAsync(productData);
-      } else {
-        await createMutation.mutateAsync(productData);
+      const url = isEditing
+        ? `/api/products/${initialData!.id}`
+        : "/api/products";
+      const method = isEditing ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Failed to save product");
       }
+
+      // Invalidate queries and redirect
+      queryClient.invalidateQueries({ queryKey: productKeys.all });
+      router.push("/admin/products");
+      router.refresh();
     } catch (err) {
-      // Error handled in mutation callbacks
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -229,29 +223,19 @@ export function ProductForm({
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Tình trạng kho</label>
-              <select
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <option value="Còn hàng">Còn hàng</option>
-                <option value="Hết hàng">Hết hàng</option>
-                <option value="Sắp về">Sắp về</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Số lượng tồn kho</label>
               <input
-                type="checkbox"
-                id="inStock"
-                checked={inStock}
-                onChange={(e) => setInStock(e.target.checked)}
-                className="w-4 h-4 rounded border-input text-primary focus:ring-primary"
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                min="0"
+                placeholder="0"
+                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                required
               />
-              <label htmlFor="inStock" className="text-sm font-medium">
-                Đang kinh doanh
-              </label>
+              <p className="text-xs text-muted-foreground">
+                Nhập số lượng sản phẩm có sẵn trong kho
+              </p>
             </div>
           </div>
 
