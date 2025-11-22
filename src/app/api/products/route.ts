@@ -43,11 +43,15 @@ export async function POST(request: NextRequest) {
       price: body.price,
       price_value: body.price_value,
       rating: body.rating || 0,
-      image: body.image,
+      images: body.images,
       description: body.description,
       badge: body.badge || null,
       category: body.category,
       quantity: body.quantity,
+      care_light: body.care_light || null,
+      care_water: body.care_water || null,
+      care_temperature: body.care_temperature || null,
+      care_fertilizer: body.care_fertilizer || null,
     };
 
     const newProduct = await createProduct(productData);

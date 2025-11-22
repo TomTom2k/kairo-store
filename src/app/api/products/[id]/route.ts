@@ -90,11 +90,17 @@ export async function PUT(
     if (body.price !== undefined) updates.price = body.price;
     if (body.price_value !== undefined) updates.price_value = body.price_value;
     if (body.rating !== undefined) updates.rating = body.rating;
-    if (body.image !== undefined) updates.image = body.image;
+    if (body.images !== undefined) updates.images = body.images;
     if (body.description !== undefined) updates.description = body.description;
     if (body.badge !== undefined) updates.badge = body.badge;
     if (body.category !== undefined) updates.category = body.category;
     if (body.quantity !== undefined) updates.quantity = body.quantity;
+    if (body.care_light !== undefined) updates.care_light = body.care_light;
+    if (body.care_water !== undefined) updates.care_water = body.care_water;
+    if (body.care_temperature !== undefined)
+      updates.care_temperature = body.care_temperature;
+    if (body.care_fertilizer !== undefined)
+      updates.care_fertilizer = body.care_fertilizer;
 
     const updatedProduct = await updateProduct(productId, updates);
     const adaptedProduct = adaptSupabaseProduct(updatedProduct);
