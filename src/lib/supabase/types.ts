@@ -4,7 +4,6 @@ import { z } from "zod";
 export const ProductSchema = z.object({
   id: z.number(),
   name: z.string(),
-  price: z.string(),
   price_value: z.number(),
   rating: z.number().min(0).max(5),
   images: z.array(z.string().url()).min(1),

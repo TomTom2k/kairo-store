@@ -1,4 +1,5 @@
 import type { Product as SupabaseProduct } from "@/lib/supabase/types";
+import { formatPrice } from "@/lib/utils/price";
 
 /**
  * Component-friendly Product interface (camelCase)
@@ -7,8 +8,8 @@ import type { Product as SupabaseProduct } from "@/lib/supabase/types";
 export interface Product {
   id: number;
   name: string;
-  price: string;
-  priceValue: number;
+  price: string; // Formatted price for display (generated from priceValue)
+  priceValue: number; // Actual price value for calculations
   rating: number;
   images: string[];
   description: string;
@@ -30,7 +31,7 @@ export function adaptSupabaseProduct(
   return {
     id: supabaseProduct.id,
     name: supabaseProduct.name,
-    price: supabaseProduct.price,
+    price: formatPrice(supabaseProduct.price_value), // Generate from price_value
     priceValue: supabaseProduct.price_value,
     rating: supabaseProduct.rating,
     images: supabaseProduct.images,
@@ -58,12 +59,11 @@ export function adaptSupabaseProducts(
  * Convert Component Product (camelCase) to Supabase Product (snake_case)
  */
 export function toSupabaseProduct(
-  product: Product
-): Omit<SupabaseProduct, "created_at" | "updated_at"> {
+  product: Partial<Product>
+): Partial<Omit<SupabaseProduct, "created_at" | "updated_at">> {
   return {
     id: product.id,
     name: product.name,
-    price: product.price,
     price_value: product.priceValue,
     rating: product.rating,
     images: product.images,

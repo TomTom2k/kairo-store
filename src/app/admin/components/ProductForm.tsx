@@ -26,7 +26,6 @@ export function ProductForm({
 
   // Form states
   const [name, setName] = useState(initialData?.name || "");
-  const [price, setPrice] = useState(initialData?.price || "");
   const [priceValue, setPriceValue] = useState(
     initialData?.priceValue?.toString() || ""
   );
@@ -64,7 +63,6 @@ export function ProductForm({
 
       const productData = {
         name,
-        price,
         price_value: parseInt(priceValue),
         rating: initialData?.rating || 0,
         images: images,
@@ -270,19 +268,7 @@ export function ProductForm({
             <h3 className="font-semibold text-lg">Giá & Kho</h3>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Giá hiển thị</label>
-              <input
-                type="text"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="150.000 ₫"
-                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Giá trị (VNĐ)</label>
+              <label className="text-sm font-medium">Giá (VNĐ)</label>
               <input
                 type="number"
                 value={priceValue}
@@ -291,6 +277,9 @@ export function ProductForm({
                 className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                Giá sẽ tự động format khi hiển thị (VD: 150.000 ₫)
+              </p>
             </div>
 
             <div className="space-y-2">

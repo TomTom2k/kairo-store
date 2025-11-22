@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   Store,
+  Tag,
 } from "lucide-react";
 import { logoutAdmin } from "@/app/actions/auth";
 
@@ -22,6 +23,11 @@ const menuItems = [
     title: "Sản Phẩm",
     href: "/admin/products",
     icon: Package,
+  },
+  {
+    title: "Mã Giảm Giá",
+    href: "/admin/discounts",
+    icon: Tag,
   },
   {
     title: "Đơn Hàng",

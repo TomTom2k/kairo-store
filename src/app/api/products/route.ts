@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
     // Validate request body
     const productData = {
       name: body.name,
-      price: body.price,
       price_value: body.price_value,
       rating: body.rating || 0,
       images: body.images,
