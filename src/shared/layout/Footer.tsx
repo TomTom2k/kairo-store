@@ -1,7 +1,17 @@
 "use client";
 
 import { Button } from "@/shared/ui";
-import { Facebook, Instagram, Leaf, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Leaf,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+} from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -19,21 +29,37 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Mang thiên nhiên vào không gian sống của bạn. 
-              Chúng tôi cung cấp những loại cây xanh chất lượng cao 
-              với dịch vụ chăm sóc khách hàng tận tâm.
+              Mang thiên nhiên vào không gian sống của bạn. Chúng tôi cung cấp
+              những loại cây xanh chất lượng cao với dịch vụ chăm sóc khách hàng
+              tận tâm.
             </p>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="glass hover:scale-110 transition-all">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="glass hover:scale-110 transition-all"
+              >
                 <Facebook className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="glass hover:scale-110 transition-all">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="glass hover:scale-110 transition-all"
+              >
                 <Instagram className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="glass hover:scale-110 transition-all">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="glass hover:scale-110 transition-all"
+              >
                 <Twitter className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="glass hover:scale-110 transition-all">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="glass hover:scale-110 transition-all"
+              >
                 <Youtube className="w-5 h-5" />
               </Button>
             </div>
@@ -44,29 +70,36 @@ export function Footer() {
             <h3 className="font-semibold text-lg">Liên Kết</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="/about"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Về Chúng Tôi
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Sản Phẩm
-                </a>
+                <Link
+                  href="/categories"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Danh mục
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Hướng Dẫn Chăm Sóc
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="/blog"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="/contact"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Liên Hệ
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -76,27 +109,42 @@ export function Footer() {
             <h3 className="font-semibold text-lg">Hỗ Trợ</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Chính Sách Đổi Trả
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Vận Chuyển
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Thanh Toán
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Điều Khoản Sử Dụng
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
                   Chính Sách Bảo Mật
                 </a>
               </li>
@@ -139,4 +187,3 @@ export function Footer() {
     </footer>
   );
 }
-

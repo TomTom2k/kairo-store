@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Header, Footer } from "@/shared/layout";
 import { ScrollIndicator } from "@/shared/ui";
 import {
@@ -16,16 +17,64 @@ import { Filter, Search, Loader2 } from "lucide-react";
 import { Button } from "@/shared/ui";
 
 export default function CategoriesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   // Fetch products from Supabase
   const { data: products = [], isLoading, error } = useProducts();
 
-  // Filter states
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
-  const [minRating, setMinRating] = useState<number>(0);
-  const [sortOption, setSortOption] = useState<SortOption>("default");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  // Initialize filter states from URL params
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
+    const categoryParam = searchParams.get("category");
+    // Support multiple categories separated by comma
+    return categoryParam ? categoryParam.split(",").filter(Boolean) : [];
+  });
+  const [priceRange, setPriceRange] = useState<[number, number]>(() => {
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
+    return [
+      minPrice ? parseInt(minPrice) : 0,
+      maxPrice ? parseInt(maxPrice) : 1000000,
+    ];
+  });
+  const [minRating, setMinRating] = useState<number>(() => {
+    const rating = searchParams.get("rating");
+    return rating ? parseInt(rating) : 0;
+  });
+  const [sortOption, setSortOption] = useState<SortOption>(() => {
+    const sort = searchParams.get("sort");
+    return (sort as SortOption) || "default";
+  });
+  const [searchQuery, setSearchQuery] = useState<string>(() => {
+    return searchParams.get("q") || "";
+  });
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    // Support multiple categories separated by comma
+    if (selectedCategories.length > 0) {
+      params.set("category", selectedCategories.join(","));
+    }
+    if (priceRange[0] !== 0) params.set("minPrice", priceRange[0].toString());
+    if (priceRange[1] !== 1000000)
+      params.set("maxPrice", priceRange[1].toString());
+    if (minRating > 0) params.set("rating", minRating.toString());
+    if (sortOption !== "default") params.set("sort", sortOption);
+    if (searchQuery) params.set("q", searchQuery);
+
+    const newUrl = params.toString() ? `?${params.toString()}` : "/categories";
+    router.replace(newUrl, { scroll: false });
+  }, [
+    selectedCategories,
+    priceRange,
+    minRating,
+    sortOption,
+    searchQuery,
+    router,
+  ]);
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {

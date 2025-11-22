@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import { PlantCard } from "@/shared/components/cards";
 import { ScrollReveal, ParallaxSection } from "@/shared/animations";
+import Link from "next/link";
 
 const plants = [
   {
@@ -141,8 +142,8 @@ export function FeaturedPlants() {
         <ParallaxSection speed={0.15}>
           <ScrollReveal delay={400}>
             <div className="text-center">
-              <a
-                href="/san-pham"
+              <Link
+                href="/categories"
                 className="inline-flex items-center justify-center h-12 rounded-full px-8 border-2 border-primary bg-background hover:bg-primary hover:text-primary-foreground transition-all duration-300 font-semibold shadow-lg hover:shadow-2xl hover:scale-105"
                 aria-label="Xem tất cả sản phẩm cây xanh"
               >
@@ -150,7 +151,7 @@ export function FeaturedPlants() {
                 <span className="ml-2 transition-transform group-hover:translate-x-1">
                   →
                 </span>
-              </a>
+              </Link>
             </div>
           </ScrollReveal>
         </ParallaxSection>

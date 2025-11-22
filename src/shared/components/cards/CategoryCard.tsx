@@ -27,33 +27,43 @@ interface Category {
   bgColor: string;
 }
 
-export function CategoryCard({ category, index }: { category: Category; index: number }) {
+export function CategoryCard({
+  category,
+  index,
+}: {
+  category: Category;
+  index: number;
+}) {
   const router = useRouter();
   const Icon = iconMap[category.iconName];
 
   // Rotate through different animations for visual variety
   const animations = [
-    'animate-pop-in',
-    'animate-zoom-in-bounce',
-    'animate-swing-in',
-    'animate-bounce-in-up',
-    'animate-slide-in-bottom',
-    'animate-fade-in-scale',
+    "animate-pop-in",
+    "animate-zoom-in-bounce",
+    "animate-swing-in",
+    "animate-bounce-in-up",
+    "animate-slide-in-bottom",
+    "animate-fade-in-scale",
   ];
-  
+
   const animationClass = animations[index % animations.length];
 
   return (
     <Card
-      onClick={() => router.push(`/danh-muc/${category.slug}`)}
+      onClick={() =>
+        router.push(`/categories?category=${encodeURIComponent(category.name)}`)
+      }
       className={`group relative overflow-hidden cursor-pointer border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 glass-card ${animationClass}`}
       style={{ animationDelay: `${index * 0.15}s` }}
       role="button"
       tabIndex={0}
       aria-label={`Xem danh mục ${category.name}`}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          router.push(`/danh-muc/${category.slug}`);
+        if (e.key === "Enter" || e.key === " ") {
+          router.push(
+            `/categories?category=${encodeURIComponent(category.name)}`
+          );
         }
       }}
     >
@@ -67,9 +77,11 @@ export function CategoryCard({ category, index }: { category: Category; index: n
           aria-hidden="true"
         >
           <Icon className="w-10 h-10 text-white animate-pulse-subtle" />
-          
+
           {/* Glow effect */}
-          <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300`} />
+          <div
+            className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300`}
+          />
         </div>
 
         {/* Text */}
@@ -87,8 +99,14 @@ export function CategoryCard({ category, index }: { category: Category; index: n
       </div>
 
       {/* Animated background circles */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-500" aria-hidden="true" />
-      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-500 delay-75" aria-hidden="true" />
+      <div
+        className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-500"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-500 delay-75"
+        aria-hidden="true"
+      />
     </Card>
   );
 }
