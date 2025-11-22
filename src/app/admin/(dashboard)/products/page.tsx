@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Pencil, Trash2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Pencil,
+  Trash2,
+  CheckSquare,
+  Square,
+} from "lucide-react";
 import { Button } from "@/shared/ui";
 import { useProducts } from "@/hooks/useProducts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,6 +20,8 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const queryClient = useQueryClient();
 
   const filteredProducts = products.filter((product) =>
@@ -43,6 +52,47 @@ export default function AdminProductsPage() {
     } finally {
       setIsDeleting(false);
     }
+  };
+
+  const handleBulkDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const deletePromises = selectedIds.map((id) =>
+        fetch(`/api/products/${id}`, { method: "DELETE" })
+      );
+
+      const responses = await Promise.all(deletePromises);
+      const failed = responses.filter((r) => !r.ok);
+
+      if (failed.length > 0) {
+        throw new Error(`Failed to delete ${failed.length} products`);
+      }
+
+      queryClient.invalidateQueries({ queryKey: productKeys.all });
+      setSelectedIds([]);
+      setShowBulkDeleteConfirm(false);
+    } catch (error) {
+      console.error("Error bulk deleting:", error);
+      alert(
+        error instanceof Error ? error.message : "Failed to delete products"
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredProducts.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredProducts.map((p) => p.id));
+    }
+  };
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
   };
 
   const getQuantityColor = (quantity: number) => {
@@ -82,6 +132,16 @@ export default function AdminProductsPage() {
             className="w-full pl-10 pr-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
+        {selectedIds.length > 0 && (
+          <Button
+            variant="destructive"
+            onClick={() => setShowBulkDeleteConfirm(true)}
+            className="gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Xóa {selectedIds.length} sản phẩm
+          </Button>
+        )}
       </div>
 
       {/* Products Table */}
@@ -90,6 +150,19 @@ export default function AdminProductsPage() {
           <table className="w-full">
             <thead className="bg-muted/50">
               <tr>
+                <th className="px-6 py-4 text-left">
+                  <button
+                    onClick={toggleSelectAll}
+                    className="flex items-center justify-center w-5 h-5 rounded border-2 border-muted-foreground/30 hover:border-primary transition-colors"
+                  >
+                    {selectedIds.length === filteredProducts.length &&
+                    filteredProducts.length > 0 ? (
+                      <CheckSquare className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Square className="w-5 h-5 text-muted-foreground/30" />
+                    )}
+                  </button>
+                </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
                   Sản Phẩm
                 </th>
@@ -111,7 +184,7 @@ export default function AdminProductsPage() {
               {isLoading ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className="px-6 py-8 text-center text-muted-foreground"
                   >
                     Đang tải dữ liệu...
@@ -120,7 +193,7 @@ export default function AdminProductsPage() {
               ) : filteredProducts.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className="px-6 py-8 text-center text-muted-foreground"
                   >
                     Không tìm thấy sản phẩm nào
@@ -132,6 +205,18 @@ export default function AdminProductsPage() {
                     key={product.id}
                     className="hover:bg-muted/50 transition-colors"
                   >
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => toggleSelect(product.id)}
+                        className="flex items-center justify-center w-5 h-5 rounded border-2 border-muted-foreground/30 hover:border-primary transition-colors"
+                      >
+                        {selectedIds.includes(product.id) ? (
+                          <CheckSquare className="w-5 h-5 text-primary" />
+                        ) : (
+                          <Square className="w-5 h-5 text-muted-foreground/30" />
+                        )}
+                      </button>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-md bg-muted overflow-hidden relative">
@@ -247,6 +332,68 @@ export default function AdminProductsPage() {
                   <>
                     <Trash2 className="w-4 h-4" />
                     Xóa
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Delete Confirmation Dialog */}
+      {showBulkDeleteConfirm && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+          onClick={() => !isDeleting && setShowBulkDeleteConfirm(false)}
+        >
+          <div
+            className="bg-card rounded-xl border border-border shadow-2xl max-w-md w-full animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header with Icon */}
+            <div className="p-6 pb-4">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+                </div>
+                <div className="flex-1 pt-1">
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
+                    Xác nhận xóa {selectedIds.length} sản phẩm
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Bạn có chắc chắn muốn xóa {selectedIds.length} sản phẩm đã
+                    chọn? Hành động này không thể hoàn tác và sẽ xóa vĩnh viễn
+                    các sản phẩm khỏi hệ thống.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="px-6 py-4 bg-muted/30 rounded-b-xl flex items-center justify-end gap-3">
+              <Button
+                variant="ghost"
+                onClick={() => setShowBulkDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="min-w-[80px]"
+              >
+                Hủy
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleBulkDelete}
+                disabled={isDeleting}
+                className="min-w-[80px] gap-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Đang xóa...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Xóa {selectedIds.length} sản phẩm
                   </>
                 )}
               </Button>
