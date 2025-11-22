@@ -90,7 +90,7 @@ export function ShareModal({ isOpen, onClose, product }: ShareModalProps) {
           {/* Product Preview */}
           <div className="flex items-center gap-3 p-3 glass rounded-lg mb-6">
             <img
-              src={product.images[0]}
+              src={product.images?.[0] || "/placeholder.jpg"}
               alt={product.name}
               className="w-16 h-16 rounded-lg object-cover"
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/shared/ui";
-import { Leaf, Menu, Search, ShoppingCart, User } from "lucide-react";
+import { Leaf, Menu, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 import { useState } from "react";
@@ -16,7 +16,10 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group cursor-pointer">
+          <Link
+            href="/"
+            className="flex items-center gap-2 group cursor-pointer"
+          >
             <div className="flex items-center justify-center w-10 h-10 rounded-full glass-button group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
               <Leaf className="w-6 h-6 text-primary drop-shadow-lg" />
             </div>
@@ -27,33 +30,44 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Trang Chủ
             </Link>
-              <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/categories"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Danh Mục
             </Link>
-            <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/about"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Về Chúng Tôi
             </Link>
-            <Link href="/contact" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/contact"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Liên Hệ
-             </Link>
+            </Link>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            
-            <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
-              <User className="w-5 h-5" />
-            </Button>
-            
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative glass hover:scale-110 border-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative glass hover:scale-110 border-0"
+              >
                 <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold animate-bounce-in">
-                    {totalItems > 99 ? '99+' : totalItems}
+                    {totalItems > 99 ? "99+" : totalItems}
                   </span>
                 )}
               </Button>
@@ -72,19 +86,34 @@ export function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden py-4 space-y-2 border-t border-white/10 animate-fade-in">
-            <a href="#" className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]"
+            >
               Trang Chủ
             </a>
-            <a href="#" className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]"
+            >
               Sản Phẩm
             </a>
-            <a href="#" className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]"
+            >
               Danh Mục
             </a>
-            <a href="#" className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]"
+            >
               Về Chúng Tôi
             </a>
-            <a href="#" className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]">
+            <a
+              href="#"
+              className="block px-4 py-2 text-sm font-medium glass rounded-xl transition-all hover:scale-[1.02]"
+            >
               Liên Hệ
             </a>
           </nav>

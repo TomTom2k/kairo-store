@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shared/ui";
-import { ArrowLeft, Save, Loader2, Plus, X } from "lucide-react";
+import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { productKeys } from "@/hooks/useProducts";
 import type { Product } from "@/lib/adapters/product.adapter";
+import { ImageUpload } from "@/shared/components/ImageUpload";
 
 interface ProductFormProps {
   initialData?: Product;
@@ -32,7 +33,7 @@ export function ProductForm({
   const [category, setCategory] = useState(
     initialData?.category || "Cây Trong Nhà"
   );
-  const [images, setImages] = useState<string[]>(initialData?.images || [""]);
+  const [images, setImages] = useState<string[]>(initialData?.images || []);
   const [description, setDescription] = useState(
     initialData?.description || ""
   );
@@ -51,33 +52,13 @@ export function ProductForm({
     initialData?.careFertilizer || ""
   );
 
-  const handleImageChange = (index: number, value: string) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setImages(newImages);
-  };
-
-  const addImageField = () => {
-    setImages([...images, ""]);
-  };
-
-  const removeImageField = (index: number) => {
-    if (images.length > 1) {
-      const newImages = images.filter((_, i) => i !== index);
-      setImages(newImages);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsSubmitting(true);
 
     try {
-      // Filter out empty image URLs
-      const validImages = images.filter((img) => img.trim() !== "");
-
-      if (validImages.length === 0) {
+      if (images.length === 0) {
         throw new Error("Vui lòng thêm ít nhất một hình ảnh");
       }
 
@@ -86,7 +67,7 @@ export function ProductForm({
         price,
         price_value: parseInt(priceValue),
         rating: initialData?.rating || 0,
-        images: validImages,
+        images: images,
         description,
         category,
         quantity: parseInt(quantity),
@@ -205,59 +186,16 @@ export function ProductForm({
           </div>
 
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Hình Ảnh</h3>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={addImageField}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Thêm ảnh
-              </Button>
-            </div>
+            <h3 className="font-semibold text-lg">Hình Ảnh</h3>
+            <p className="text-sm text-muted-foreground">
+              Upload ảnh sản phẩm (ảnh đầu tiên sẽ là ảnh chính)
+            </p>
 
-            <div className="space-y-4">
-              {images.map((image, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium">
-                      Ảnh {index + 1}
-                      {index === 0 && " (Ảnh chính)"}
-                    </label>
-                    {images.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeImageField(index)}
-                        className="h-6 w-6 p-0"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => handleImageChange(index, e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
-                    required={index === 0}
-                  />
-                  {image && (
-                    <div className="mt-2 aspect-video relative rounded-lg overflow-hidden border border-border bg-muted">
-                      <img
-                        src={image}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            <ImageUpload
+              images={images}
+              onImagesChange={setImages}
+              maxImages={10}
+            />
           </div>
 
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">

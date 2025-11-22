@@ -69,7 +69,7 @@ export async function createOrder(
       items: cartItems.map((item) => ({
         productId: item.product.id,
         productName: item.product.name,
-        productImage: item.product.images[0],
+        productImage: item.product.images?.[0] || "/placeholder.jpg",
         price: item.product.priceValue,
         quantity: item.quantity,
         subtotal: item.product.priceValue * item.quantity,

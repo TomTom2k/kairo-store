@@ -23,12 +23,11 @@ interface Plant {
   price: string;
   priceValue: number;
   rating: number;
-  image: string;
+  images: string[];
   description: string;
   badge: string | null;
   category: string;
-  stock: string;
-  inStock: boolean;
+  quantity: number;
 }
 
 export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
@@ -133,7 +132,7 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
             {/* Image Container với multiple effects */}
             <div className="relative h-64 overflow-hidden bg-gradient-to-br from-accent/20 to-primary/5">
               <Image
-                src={plant.image}
+                src={plant.images?.[0] || "/placeholder.jpg"}
                 alt={`${plant.name} - ${plant.description}`}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

@@ -1,27 +1,55 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Leaf } from "lucide-react";
 
-// Client Component - Chỉ phần animation
+// Generate random values once on mount to avoid hydration mismatch
+const generateLeafData = () => {
+  return [...Array(20)].map(() => ({
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    delay: Math.random() * 5,
+    duration: 5 + Math.random() * 10,
+    size: 20 + Math.random() * 40,
+    rotation: Math.random() * 360,
+  }));
+};
+
 export function FloatingLeaves() {
+  const [mounted, setMounted] = useState(false);
+  const [leaves, setLeaves] = useState<ReturnType<typeof generateLeafData>>([]);
+
+  useEffect(() => {
+    setLeaves(generateLeafData());
+    setMounted(true);
+  }, []);
+
+  // Don't render anything on server to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      {[...Array(20)].map((_, i) => (
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
+      {leaves.map((leaf, i) => (
         <div
           key={i}
           className="absolute animate-float opacity-20"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${5 + Math.random() * 10}s`,
+            left: `${leaf.left}%`,
+            top: `${leaf.top}%`,
+            animationDelay: `${leaf.delay}s`,
+            animationDuration: `${leaf.duration}s`,
           }}
         >
           <Leaf
             className="text-primary"
-            size={20 + Math.random() * 40}
+            size={leaf.size}
             style={{
-              transform: `rotate(${Math.random() * 360}deg)`,
+              transform: `rotate(${leaf.rotation}deg)`,
             }}
           />
         </div>
@@ -29,4 +57,3 @@ export function FloatingLeaves() {
     </div>
   );
 }
-

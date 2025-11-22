@@ -20,7 +20,7 @@ export function OrderSummary() {
           >
             <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
               <Image
-                src={item.product.images[0]}
+                src={item.product.images?.[0] || "/placeholder.jpg"}
                 alt={item.product.name}
                 fill
                 className="object-cover"
