@@ -180,7 +180,7 @@ export default function CategoriesPage() {
             />
           </div>
           {/* Filter and Sort */}
-          <div className="flex items-center justify-between gap-2">
+          <div className="sticky top-28 flex items-center justify-between gap-2">
             <Button
               onClick={() => setIsMobileFilterOpen(true)}
               className="flex items-center gap-2"
@@ -196,16 +196,18 @@ export default function CategoriesPage() {
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Desktop Filters Sidebar */}
-          <aside className="hidden lg:block sticky top-28 self-start">
-            <ProductFilters
-              selectedCategories={selectedCategories}
-              onCategoryChange={setSelectedCategories}
-              priceRange={priceRange}
-              onPriceRangeChange={setPriceRange}
-              minRating={minRating}
-              onMinRatingChange={setMinRating}
-              onReset={handleResetFilters}
-            />
+          <aside className="hidden lg:block">
+            <div className="sticky top-28 h-fit">
+              <ProductFilters
+                selectedCategories={selectedCategories}
+                onCategoryChange={setSelectedCategories}
+                priceRange={priceRange}
+                onPriceRangeChange={setPriceRange}
+                minRating={minRating}
+                onMinRatingChange={setMinRating}
+                onReset={handleResetFilters}
+              />
+            </div>
           </aside>
 
           {/* Products Grid */}
