@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/shared/ui";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { JsonImportModal } from "./JsonImportModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { productKeys } from "@/hooks/useProducts";
 import type { Product } from "@/lib/adapters/product.adapter";
 import { ImageUpload } from "@/shared/components/ImageUpload";
+import { RichTextEditor } from "@/shared/components/RichTextEditor";
+import { generateSlug } from "@/lib/utils/slug.utils";
 
 interface ProductFormProps {
   initialData?: Product;
@@ -22,7 +25,56 @@ export function ProductForm({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        const result = await response.json();
+        if (result.success) {
+          setCategories(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleImport = (data: any) => {
+    if (data.name) setName(data.name);
+    if (data.category) setCategory(data.category);
+    if (data.price_estimate) {
+      // Remove non-numeric characters except dot/comma if needed, but simple parsing for now
+      const price = data.price_estimate.toString().replace(/[^0-9]/g, "");
+      setPriceValue(price);
+    }
+    if (data.description) setDescription(data.description);
+
+    if (data.care_instructions) {
+      if (data.care_instructions.light)
+        setCareLight(data.care_instructions.light);
+      if (data.care_instructions.water)
+        setCareWater(data.care_instructions.water);
+      if (data.care_instructions.temperature)
+        setCareTemperature(data.care_instructions.temperature);
+      if (data.care_instructions.fertilizer)
+        setCareFertilizer(data.care_instructions.fertilizer);
+    }
+
+    if (data.seo) {
+      if (data.seo.meta_title) setMetaTitle(data.seo.meta_title);
+      if (data.seo.meta_description)
+        setMetaDescription(data.seo.meta_description);
+      if (data.seo.keywords) setKeywords(data.seo.keywords);
+      if (data.seo.slug) setSlug(data.seo.slug);
+    }
+  };
 
   // Form states
   const [name, setName] = useState(initialData?.name || "");
@@ -40,6 +92,15 @@ export function ProductForm({
     initialData?.quantity?.toString() || "0"
   );
   const [badge, setBadge] = useState(initialData?.badge || "");
+
+  // SEO states
+  const [metaTitle, setMetaTitle] = useState(initialData?.metaTitle || "");
+  const [metaDescription, setMetaDescription] = useState(
+    initialData?.metaDescription || ""
+  );
+  const [keywords, setKeywords] = useState(initialData?.keywords || "");
+  const [slug, setSlug] = useState(initialData?.slug || "");
+  const [video, setVideo] = useState(initialData?.video || "");
 
   // Care instruction states
   const [careLight, setCareLight] = useState(initialData?.careLight || "");
@@ -74,6 +135,11 @@ export function ProductForm({
         care_water: careWater || null,
         care_temperature: careTemperature || null,
         care_fertilizer: careFertilizer || null,
+        meta_title: metaTitle || null,
+        meta_description: metaDescription || null,
+        keywords: keywords || null,
+        slug: slug || null,
+        video: video || null,
       };
 
       const url = isEditing
@@ -127,6 +193,14 @@ export function ProductForm({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsImportModalOpen(true)}
+            className="mr-2"
+          >
+            Import JSON
+          </Button>
           <Link href="/admin/products">
             <Button variant="outline" type="button">
               Hủy
@@ -147,6 +221,12 @@ export function ProductForm({
           </Button>
         </div>
       </div>
+
+      <JsonImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={handleImport}
+      />
 
       {error && (
         <div className="bg-destructive/10 text-destructive p-4 rounded-lg border border-destructive/20">
@@ -173,12 +253,10 @@ export function ProductForm({
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Mô tả</label>
-              <textarea
+              <RichTextEditor
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={5}
-                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
-                required
+                onChange={setDescription}
+                placeholder="Mô tả chi tiết về sản phẩm..."
               />
             </div>
           </div>
@@ -194,6 +272,19 @@ export function ProductForm({
               onImagesChange={setImages}
               maxImages={10}
             />
+
+            <div className="pt-4 border-t border-border">
+              <label className="text-sm font-medium mb-2 block">
+                Video URL (Youtube, Vimeo...)
+              </label>
+              <input
+                type="text"
+                value={video}
+                onChange={(e) => setVideo(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
           </div>
 
           <div className="bg-card p-6 rounded-lg border border-border space-y-4">
@@ -260,6 +351,121 @@ export function ProductForm({
               </div>
             </div>
           </div>
+
+          <div className="bg-card p-6 rounded-lg border border-border space-y-6">
+            <h3 className="font-semibold text-lg">SEO & Marketing</h3>
+            <p className="text-sm text-muted-foreground">
+              Tối ưu hóa hiển thị trên công cụ tìm kiếm
+            </p>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <label className="text-sm font-medium">Meta Title</label>
+                  <span
+                    className={`text-xs ${
+                      metaTitle.length > 60
+                        ? "text-destructive"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {metaTitle.length}/60
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={metaTitle}
+                  onChange={(e) => setMetaTitle(e.target.value)}
+                  placeholder={name || "Tiêu đề sản phẩm"}
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <label className="text-sm font-medium">
+                    Meta Description
+                  </label>
+                  <span
+                    className={`text-xs ${
+                      metaDescription.length > 160
+                        ? "text-destructive"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {metaDescription.length}/160
+                  </span>
+                </div>
+                <textarea
+                  value={metaDescription}
+                  onChange={(e) => setMetaDescription(e.target.value)}
+                  rows={3}
+                  placeholder={
+                    description
+                      ? description.replace(/<[^>]*>?/gm, "").substring(0, 160)
+                      : "Mô tả ngắn gọn về sản phẩm..."
+                  }
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Keywords (phân cách bằng dấu phẩy)
+                </label>
+                <input
+                  type="text"
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
+                  placeholder="cây cảnh, cây trong nhà, quà tặng..."
+                  className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">URL Slug</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                    placeholder={generateSlug(name)}
+                    className="flex-1 px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setSlug(generateSlug(name))}
+                    disabled={!name}
+                  >
+                    Auto Generate
+                  </Button>
+                </div>
+              </div>
+
+              {/* SEO Preview */}
+              <div className="mt-6 p-4 bg-muted/30 rounded-lg border border-border">
+                <h4 className="text-sm font-medium mb-3">
+                  Google Search Preview
+                </h4>
+                <div className="bg-white p-4 rounded shadow-sm max-w-[600px]">
+                  <div className="text-[#1a0dab] text-xl cursor-pointer hover:underline truncate">
+                    {metaTitle || name || "Tiêu đề sản phẩm"}
+                  </div>
+                  <div className="text-[#006621] text-sm truncate">
+                    kairo-store.com/products/
+                    {slug || generateSlug(name) || "ten-san-pham"}
+                  </div>
+                  <div className="text-[#545454] text-sm line-clamp-2">
+                    {metaDescription ||
+                      (description
+                        ? description.replace(/<[^>]*>?/gm, "")
+                        : "Mô tả sản phẩm sẽ hiển thị ở đây...")}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Sidebar Info */}
@@ -309,11 +515,12 @@ export function ProductForm({
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-4 py-2 bg-background rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
-                <option value="Cây Trong Nhà">Cây Trong Nhà</option>
-                <option value="Cây Ngoài Trời">Cây Ngoài Trời</option>
-                <option value="Chậu Cây">Chậu Cây</option>
-                <option value="Phụ Kiện">Phụ Kiện</option>
-                <option value="Đất & Phân Bón">Đất & Phân Bón</option>
+                <option value="">Chọn danh mục</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 

@@ -28,6 +28,8 @@ interface Plant {
   badge: string | null;
   category: string;
   quantity: number;
+  stock: string;
+  slug?: string | null;
 }
 
 export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
@@ -65,11 +67,14 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
 
   const animationClass = animations[index % animations.length];
   const animationDelay = (index % 3) * 0.1;
+  const productLink = plant.slug
+    ? `/products/${plant.slug}`
+    : `/products/${plant.id}`;
 
   return (
     <>
       <TiltCard intensity={10}>
-        <Link href={`/products/${plant.id}`} className="block">
+        <Link href={productLink} className="block">
           <Card
             className={`group relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl glass-card ${animationClass}`}
             style={{ animationDelay: `${animationDelay}s` }}
@@ -168,8 +173,8 @@ export function PlantCard({ plant, index }: { plant: Plant; index: number }) {
                   </span>
                 </div>
               </div>
-              <CardDescription className="group-hover:text-foreground transition-colors">
-                {plant.description}
+              <CardDescription className="group-hover:text-foreground transition-colors line-clamp-2">
+                {plant.description.replace(/<[^>]*>/g, "").substring(0, 100)}...
               </CardDescription>
             </CardHeader>
 

@@ -20,11 +20,11 @@ interface Category {
   id: number;
   name: string;
   slug: string;
-  iconName: IconName;
-  count: string;
-  description: string;
-  color: string;
-  bgColor: string;
+  iconName?: string | null;
+  count?: string;
+  description?: string | null;
+  color?: string | null;
+  bgColor?: string | null;
 }
 
 export function CategoryCard({
@@ -35,7 +35,11 @@ export function CategoryCard({
   index: number;
 }) {
   const router = useRouter();
-  const Icon = iconMap[category.iconName];
+  // Cast iconName to IconName if valid, otherwise default to Leaf
+  const Icon =
+    category.iconName && category.iconName in iconMap
+      ? iconMap[category.iconName as IconName]
+      : Leaf;
 
   // Rotate through different animations for visual variety
   const animations = [
@@ -70,7 +74,9 @@ export function CategoryCard({
       <div className="p-6 flex flex-col items-center text-center space-y-4">
         {/* Icon with 3D effect */}
         <div
-          className={`relative w-20 h-20 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+          className={`relative w-20 h-20 rounded-2xl bg-gradient-to-br ${
+            category.color || "from-primary/20 to-primary/40"
+          } flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
           style={{
             transform: "perspective(500px) translateZ(20px)",
           }}
@@ -80,7 +86,9 @@ export function CategoryCard({
 
           {/* Glow effect */}
           <div
-            className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300`}
+            className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+              category.color || "from-primary/20 to-primary/40"
+            } opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300`}
           />
         </div>
 
@@ -89,7 +97,9 @@ export function CategoryCard({
           <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
             {category.name}
           </h3>
-          <p className="text-sm text-muted-foreground">{category.count}</p>
+          {category.count && (
+            <p className="text-sm text-muted-foreground">{category.count}</p>
+          )}
         </div>
 
         {/* Hover arrow */}

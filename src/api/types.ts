@@ -12,11 +12,17 @@ export interface Product {
   category: string;
   rating: number;
   quantity: number;
+  stock: string;
   badge: string | null;
   careLight?: string | null;
   careWater?: string | null;
   careTemperature?: string | null;
   careFertilizer?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  keywords?: string | null;
+  slug?: string | null;
+  video?: string | null;
 }
 
 // ============================================

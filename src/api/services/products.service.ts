@@ -44,6 +44,28 @@ export async function getProductById(id: number): Promise<Product | null> {
 }
 
 /**
+ * Fetch a single product by Slug
+ */
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+  if (error) {
+    if (error.code === "PGRST116") {
+      // Not found
+      return null;
+    }
+    console.error("Error fetching product by slug:", error);
+    throw new Error(`Failed to fetch product: ${error.message}`);
+  }
+
+  // Validate response data
+  return ProductSchema.parse(data);
+}
+
+/**
  * Fetch products by category
  */
 export async function getProductsByCategory(

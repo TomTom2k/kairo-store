@@ -170,6 +170,9 @@ export default function AdminProductsPage() {
                   Danh Mục
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
+                  Slug
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
                   Giá
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
@@ -235,6 +238,15 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm">{product.category}</td>
+                    <td className="px-6 py-4 text-sm max-w-[200px] truncate">
+                      <Link
+                        href={`/products/${product.slug || product.id}`}
+                        target="_blank"
+                        className="text-primary hover:underline"
+                      >
+                        {product.slug || "-"}
+                      </Link>
+                    </td>
                     <td className="px-6 py-4 text-sm font-medium">
                       {new Intl.NumberFormat("vi-VN", {
                         style: "currency",

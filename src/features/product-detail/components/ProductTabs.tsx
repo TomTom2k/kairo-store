@@ -114,30 +114,10 @@ export function ProductTabs({
         {activeTab === "description" && (
           <div className="space-y-4 animate-fade-in">
             <h3 className="text-xl font-semibold">Mô Tả Sản Phẩm</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {description}
-            </p>
-            <div className="glass rounded-lg p-6 space-y-3">
-              <h4 className="font-semibold">Đặc điểm nổi bật:</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span>Cây khỏe mạnh, được chăm sóc kỹ lưỡng</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span>Phù hợp với khí hậu Việt Nam</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span>Dễ dàng chăm sóc và sinh trưởng tốt</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span>Đóng gói cẩn thận, giao hàng an toàn</span>
-                </li>
-              </ul>
-            </div>
+            <div
+              className="text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
         )}
 

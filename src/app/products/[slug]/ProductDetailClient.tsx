@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import { Header, Footer } from "@/shared/layout";
 import { ScrollIndicator } from "@/shared/ui";
 import { Breadcrumbs } from "@/features/categories";
@@ -14,28 +13,27 @@ import {
   ReviewList,
 } from "@/features/product-detail";
 import { Toast } from "@/shared/components/Toast";
-import { useProduct, useRelatedProducts } from "@/hooks/useProducts";
+import { useRelatedProducts } from "@/hooks/useProducts";
 import { useReviews, useCreateReview } from "@/hooks/useReviews";
+import type { Product } from "@/lib/adapters/product.adapter";
 
-export default function ProductPage() {
-  const params = useParams();
-  const productId = params?.id ? parseInt(params.id as string) : 0;
+interface ProductDetailClientProps {
+  product: Product;
+}
 
+export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [showToast, setShowToast] = useState(false);
 
-  // Fetch product data
-  const { data: product, isLoading: isProductLoading } = useProduct(productId);
-
   // Fetch reviews
-  const { data: reviews = [] } = useReviews(productId);
+  const { data: reviews = [] } = useReviews(product.id);
 
   // Create review mutation
   const createReviewMutation = useCreateReview();
 
   // Fetch related products
   const { data: relatedProducts = [] } = useRelatedProducts(
-    productId,
-    product?.category || "",
+    product.id,
+    product.category || "",
     4
   );
 
@@ -46,61 +44,14 @@ export default function ProductPage() {
   }) => {
     try {
       await createReviewMutation.mutateAsync({
-        product_id: productId,
+        product_id: product.id,
         ...reviewData,
       });
       setShowToast(true);
     } catch (error) {
       console.error("Failed to submit review:", error);
-      // Could add error toast here
     }
   };
-
-  // Loading state
-  if (isProductLoading) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="container mx-auto px-4 pt-28 pb-16">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-lg text-muted-foreground">
-                Đang tải sản phẩm...
-              </p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Product not found
-  if (!product) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="container mx-auto px-4 pt-28 pb-16">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl font-bold">Không tìm thấy sản phẩm</h1>
-              <p className="text-muted-foreground">
-                Sản phẩm bạn đang tìm kiếm không tồn tại.
-              </p>
-              <a
-                href="/categories"
-                className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Quay lại danh mục
-              </a>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
@@ -111,8 +62,14 @@ export default function ProductPage() {
         <Breadcrumbs
           items={[
             { label: "Danh Mục", href: "/categories" },
-            { label: product.category, href: "/categories" },
-            { label: product.name, href: `/products/${product.id}` },
+            {
+              label: product.category,
+              href: `/categories?category=${product.category}`,
+            },
+            {
+              label: product.name,
+              href: `/products/${product.slug || product.id}`,
+            },
           ]}
         />
 
@@ -122,6 +79,7 @@ export default function ProductPage() {
           <ProductImageGallery
             productName={product.name}
             images={product.images}
+            video={product.video}
           />
 
           {/* Right: Product Info */}

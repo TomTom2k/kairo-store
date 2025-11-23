@@ -2,8 +2,12 @@
 
 import { Filter, Star, X } from "lucide-react";
 import { Button } from "@/shared/ui";
-import { categories } from "../mock-products";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 interface ProductFiltersProps {
   selectedCategories: string[];
@@ -30,6 +34,22 @@ export function ProductFilters({
 }: ProductFiltersProps) {
   const [localPriceRange, setLocalPriceRange] =
     useState<[number, number]>(priceRange);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        const result = await response.json();
+        if (result.success) {
+          setCategories(result.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleCategoryToggle = (category: string) => {
     if (category === "Tất Cả") {
@@ -79,25 +99,33 @@ export function ProductFilters({
           Danh Mục
         </h4>
         <div className="space-y-2">
+          <label className="flex items-center gap-2 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={selectedCategories.length === 0}
+              onChange={() => handleCategoryToggle("Tất Cả")}
+              className="w-4 h-4 rounded border-2 border-primary/30 text-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+            />
+            <span className="text-sm group-hover:text-primary transition-colors">
+              Tất Cả
+            </span>
+          </label>
           {categories.map((category) => {
-            const isSelected =
-              category === "Tất Cả"
-                ? selectedCategories.length === 0
-                : selectedCategories.includes(category);
+            const isSelected = selectedCategories.includes(category.name);
 
             return (
               <label
-                key={category}
+                key={category.id}
                 className="flex items-center gap-2 cursor-pointer group"
               >
                 <input
                   type="checkbox"
                   checked={isSelected}
-                  onChange={() => handleCategoryToggle(category)}
+                  onChange={() => handleCategoryToggle(category.name)}
                   className="w-4 h-4 rounded border-2 border-primary/30 text-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                 />
                 <span className="text-sm group-hover:text-primary transition-colors">
-                  {category}
+                  {category.name}
                 </span>
               </label>
             );

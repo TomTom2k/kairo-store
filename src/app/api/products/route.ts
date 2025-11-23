@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProducts, createProduct } from "@/api/services/products.service";
 import { adaptSupabaseProducts } from "@/lib/adapters/product.adapter";
+import { generateSlug } from "@/lib/utils/slug.utils";
 import { z } from "zod";
 
 /**
@@ -47,10 +48,15 @@ export async function POST(request: NextRequest) {
       badge: body.badge || null,
       category: body.category,
       quantity: body.quantity,
-      care_light: body.care_light || null,
-      care_water: body.care_water || null,
       care_temperature: body.care_temperature || null,
       care_fertilizer: body.care_fertilizer || null,
+      meta_title: body.meta_title || body.name.substring(0, 60),
+      meta_description:
+        body.meta_description || body.description.substring(0, 160),
+      keywords: body.keywords || null,
+      slug: (body.slug || generateSlug(body.name)).trim(),
+      video: body.video || null,
+      stock: "Còn hàng", // Default value
     };
 
     const newProduct = await createProduct(productData);

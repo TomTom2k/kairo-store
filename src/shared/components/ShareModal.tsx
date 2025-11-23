@@ -19,6 +19,7 @@ interface ShareModalProps {
     name: string;
     price: string;
     images: string[];
+    slug?: string | null;
   };
 }
 
@@ -27,7 +28,9 @@ export function ShareModal({ isOpen, onClose, product }: ShareModalProps) {
 
   if (!isOpen) return null;
 
-  const productUrl = `${window.location.origin}/products/${product.id}`;
+  const productUrl = `${window.location.origin}/products/${
+    product.slug || product.id
+  }`;
   const shareText = `Xem sản phẩm ${product.name} - ${product.price}`;
 
   const handleCopyLink = async () => {

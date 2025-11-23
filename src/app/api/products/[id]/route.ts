@@ -101,6 +101,12 @@ export async function PUT(
       updates.care_temperature = body.care_temperature;
     if (body.care_fertilizer !== undefined)
       updates.care_fertilizer = body.care_fertilizer;
+    if (body.meta_title !== undefined) updates.meta_title = body.meta_title;
+    if (body.meta_description !== undefined)
+      updates.meta_description = body.meta_description;
+    if (body.keywords !== undefined) updates.keywords = body.keywords;
+    if (body.slug !== undefined) updates.slug = body.slug.trim();
+    if (body.video !== undefined) updates.video = body.video;
 
     const updatedProduct = await updateProduct(productId, updates);
     const adaptedProduct = adaptSupabaseProduct(updatedProduct);

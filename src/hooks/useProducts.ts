@@ -70,6 +70,30 @@ export function useProduct(id: number) {
 }
 
 /**
+ * Hook to fetch a single product by Slug
+ */
+export function useProductBySlug(slug: string) {
+  return useQuery({
+    queryKey: [...productKeys.details(), slug],
+    queryFn: async () => {
+      const response = await fetch(`/api/products/slug/${slug}`);
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(result.error || "Failed to fetch product");
+      }
+
+      return result.data as Product;
+    },
+    enabled: !!slug, // Only run if slug is provided
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+/**
  * Hook to fetch products by category
  */
 export function useProductsByCategory(category: string) {

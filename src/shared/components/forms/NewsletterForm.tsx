@@ -5,7 +5,9 @@ import { useState } from "react";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,7 +15,6 @@ export function NewsletterForm() {
 
     // Simulate API call
     setTimeout(() => {
-      console.log("Newsletter signup:", email);
       setStatus("success");
       setEmail("");
       setTimeout(() => setStatus("idle"), 3000);
@@ -21,7 +22,10 @@ export function NewsletterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-4">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-4"
+    >
       <label htmlFor="newsletter-email" className="sr-only">
         Địa chỉ email của bạn
       </label>
@@ -44,7 +48,11 @@ export function NewsletterForm() {
         aria-label="Đăng ký nhận tin"
       >
         <span className="relative z-10">
-          {status === "loading" ? "Đang gửi..." : status === "success" ? "Thành công!" : "Đăng Ký"}
+          {status === "loading"
+            ? "Đang gửi..."
+            : status === "success"
+            ? "Thành công!"
+            : "Đăng Ký"}
         </span>
         <div className="absolute inset-0 bg-gradient-to-r from-primary-dark to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Button>

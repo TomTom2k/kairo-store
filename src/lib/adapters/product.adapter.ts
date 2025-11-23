@@ -16,10 +16,16 @@ export interface Product {
   badge: string | null;
   category: string;
   quantity: number;
+  stock: string;
   careLight?: string | null;
   careWater?: string | null;
   careTemperature?: string | null;
   careFertilizer?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  keywords?: string | null;
+  slug?: string | null;
+  video?: string | null;
 }
 
 /**
@@ -39,10 +45,18 @@ export function adaptSupabaseProduct(
     badge: supabaseProduct.badge,
     category: supabaseProduct.category,
     quantity: supabaseProduct.quantity,
+    stock:
+      supabaseProduct.stock ||
+      (supabaseProduct.quantity > 0 ? "Còn hàng" : "Hết hàng"),
     careLight: supabaseProduct.care_light,
     careWater: supabaseProduct.care_water,
     careTemperature: supabaseProduct.care_temperature,
     careFertilizer: supabaseProduct.care_fertilizer,
+    metaTitle: supabaseProduct.meta_title,
+    metaDescription: supabaseProduct.meta_description,
+    keywords: supabaseProduct.keywords,
+    slug: supabaseProduct.slug,
+    video: supabaseProduct.video,
   };
 }
 
@@ -75,5 +89,9 @@ export function toSupabaseProduct(
     care_water: product.careWater,
     care_temperature: product.careTemperature,
     care_fertilizer: product.careFertilizer,
+    meta_title: product.metaTitle,
+    meta_description: product.metaDescription,
+    keywords: product.keywords,
+    slug: product.slug,
   };
 }
