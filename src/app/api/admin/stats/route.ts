@@ -1,21 +1,54 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase/client";
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { supabaseAdmin } from "@/lib/supabase/server";
+import { getAdminById } from "@/api/services/admin-auth.service";
+
+/**
+ * Check if the request has a valid admin session
+ */
+async function checkAdminAuth(): Promise<boolean> {
+  try {
+    const cookieStore = await cookies();
+    const adminSession = cookieStore.get("admin_session");
+
+    if (!adminSession?.value) {
+      return false;
+    }
+
+    // Verify that admin user exists and is active
+    const adminUser = await getAdminById(adminSession.value);
+    return !!adminUser;
+  } catch (error) {
+    console.error("Error checking admin auth:", error);
+    return false;
+  }
+}
 
 /**
  * GET /api/admin/stats
  * Get dashboard statistics
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check authentication
+  const isAuthenticated = await checkAdminAuth();
+
+  if (!isAuthenticated) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
   try {
     // Get total products count
-    const { count: productsCount, error: productsError } = await supabase
+    const { count: productsCount, error: productsError } = await supabaseAdmin
       .from("products")
       .select("*", { count: "exact", head: true });
 
     if (productsError) throw productsError;
 
     // Get total orders count and revenue
-    const { data: orders, error: ordersError } = await supabase
+    const { data: orders, error: ordersError } = await supabaseAdmin
       .from("orders")
       .select("total");
 
@@ -26,7 +59,7 @@ export async function GET() {
       orders?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
 
     // Get unique customers count (from orders)
-    const { data: uniqueCustomers, error: customersError } = await supabase
+    const { data: uniqueCustomers, error: customersError } = await supabaseAdmin
       .from("orders")
       .select("customer_email")
       .not("customer_email", "is", null);
@@ -38,7 +71,7 @@ export async function GET() {
     ).size;
 
     // Get low stock products count (quantity < 10)
-    const { count: lowStockCount, error: lowStockError } = await supabase
+    const { count: lowStockCount, error: lowStockError } = await supabaseAdmin
       .from("products")
       .select("*", { count: "exact", head: true })
       .lt("quantity", 10);
