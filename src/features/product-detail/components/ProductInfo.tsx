@@ -14,6 +14,7 @@ import { Button } from "@/shared/ui";
 import { useCartStore } from "@/store/useCartStore";
 import { Product } from "@/api/types";
 import { Toast } from "@/shared/components/Toast";
+import { useAverageRating } from "@/hooks/useReviews";
 
 interface ProductInfoProps {
   product: Product;
@@ -27,6 +28,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showAddToCartToast, setShowAddToCartToast] = useState(false);
+
+  // Get average rating from reviews
+  const { data: averageRating = 0, isLoading: isLoadingRating } =
+    useAverageRating(product.id);
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, Math.min(99, prev + delta)));
@@ -86,21 +91,36 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Rating & Stock */}
       <div className="flex items-center gap-4 flex-wrap">
-        <div className="flex items-center gap-1">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-5 h-5 ${
-                i < Math.floor(product.rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
-              }`}
-            />
-          ))}
-          <span className="ml-2 text-sm text-muted-foreground">
-            ({product.rating})
-          </span>
-        </div>
+        {!isLoadingRating && averageRating > 0 && (
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-5 h-5 ${
+                  i < Math.floor(averageRating)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
+                }`}
+              />
+            ))}
+            <span className="ml-2 text-sm text-muted-foreground">
+              ({averageRating.toFixed(1)})
+            </span>
+          </div>
+        )}
+        {!isLoadingRating && averageRating === 0 && (
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="w-5 h-5 text-gray-300"
+              />
+            ))}
+            <span className="ml-2 text-sm text-muted-foreground">
+              (Chưa có đánh giá)
+            </span>
+          </div>
+        )}
         <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-600 text-sm font-medium">
           {product.stock}
         </span>

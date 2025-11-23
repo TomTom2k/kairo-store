@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, Star, X } from "lucide-react";
+import { Filter, X } from "lucide-react";
 import { Button } from "@/shared/ui";
 import { useState, useEffect } from "react";
 
@@ -14,8 +14,6 @@ interface ProductFiltersProps {
   onCategoryChange: (categories: string[]) => void;
   priceRange: [number, number];
   onPriceRangeChange: (range: [number, number]) => void;
-  minRating: number;
-  onMinRatingChange: (rating: number) => void;
   onReset: () => void;
   isMobile?: boolean;
   onClose?: () => void;
@@ -26,8 +24,6 @@ export function ProductFilters({
   onCategoryChange,
   priceRange,
   onPriceRangeChange,
-  minRating,
-  onMinRatingChange,
   onReset,
   isMobile = false,
   onClose,
@@ -164,56 +160,6 @@ export function ProductFilters({
           >
             Áp Dụng
           </Button>
-        </div>
-      </div>
-
-      {/* Rating Filter */}
-      <div className="mb-6">
-        <h4 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">
-          Đánh Giá
-        </h4>
-        <div className="space-y-2">
-          {[5, 4, 3, 2, 1].map((rating) => (
-            <label
-              key={rating}
-              className="flex items-center gap-2 cursor-pointer group"
-            >
-              <input
-                type="radio"
-                name="rating"
-                checked={minRating === rating}
-                onChange={() => onMinRatingChange(rating)}
-                className="w-4 h-4 text-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
-              />
-              <div className="flex items-center gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < rating
-                        ? "fill-primary text-primary"
-                        : "text-muted-foreground/30"
-                    }`}
-                  />
-                ))}
-                <span className="text-sm ml-1 group-hover:text-primary transition-colors">
-                  {rating === 5 ? "" : "trở lên"}
-                </span>
-              </div>
-            </label>
-          ))}
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <input
-              type="radio"
-              name="rating"
-              checked={minRating === 0}
-              onChange={() => onMinRatingChange(0)}
-              className="w-4 h-4 text-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
-            />
-            <span className="text-sm group-hover:text-primary transition-colors">
-              Tất cả
-            </span>
-          </label>
         </div>
       </div>
 
