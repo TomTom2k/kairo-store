@@ -29,7 +29,9 @@ export function CartSummary() {
 				</div>
 
 				<div className='flex justify-between text-sm'>
-					<span className='text-muted-foreground'>Phí vận chuyển</span>
+					<span className='text-muted-foreground'>
+						Phí vận chuyển
+					</span>
 					<span className='font-medium'>
 						{shipping === 0 ? (
 							<span className='text-green-600'>Miễn phí</span>
@@ -40,7 +42,9 @@ export function CartSummary() {
 				</div>
 
 				<div className='flex justify-between text-sm'>
-					<span className='text-muted-foreground'>Thuế VAT (10%)</span>
+					<span className='text-muted-foreground'>
+						Thuế VAT (10%)
+					</span>
 					<span className='font-medium'>
 						{tax.toLocaleString('vi-VN')}đ
 					</span>
@@ -64,28 +68,14 @@ export function CartSummary() {
 						<span className='font-semibold text-primary'>
 							{(500000 - subtotal).toLocaleString('vi-VN')}đ
 						</span>{' '}
-						để được <span className='font-semibold'>miễn phí vận chuyển</span>!
+						để được{' '}
+						<span className='font-semibold'>
+							miễn phí vận chuyển
+						</span>
+						!
 					</p>
 				</div>
 			)}
-
-			{/* Promo Code */}
-			<div className='space-y-2'>
-				<label className='text-sm font-medium flex items-center gap-2'>
-					<Tag className='w-4 h-4' />
-					Mã giảm giá
-				</label>
-				<div className='flex gap-2'>
-					<input
-						type='text'
-						placeholder='Nhập mã giảm giá'
-						className='flex-1 px-3 py-2 rounded-lg glass border border-border focus:border-primary focus:outline-none text-sm'
-					/>
-					<Button variant='outline' size='sm'>
-						Áp dụng
-					</Button>
-				</div>
-			</div>
 
 			{/* Checkout Button */}
 			<Button

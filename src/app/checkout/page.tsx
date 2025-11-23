@@ -7,7 +7,6 @@ import { ScrollIndicator } from '@/shared/ui';
 import { Breadcrumbs } from '@/features/categories';
 import { GuestInfoForm, OrderSummary } from '@/features/checkout';
 import { useCartStore } from '@/store/useCartStore';
-import { createOrder } from '@/api';
 import { GuestInfo } from '@/api/types';
 
 export default function CheckoutPage() {
@@ -28,17 +27,47 @@ export default function CheckoutPage() {
 		setIsProcessingOrder(true);
 
 		try {
-			// Create order via API service
-			const response = await createOrder(items, guestInfo);
+			// Get cart totals
+			const { total } = useCartStore.getState();
 
-			if (response.success && response.data) {
+			// Format customer address
+			const customerAddress = `${guestInfo.address}, ${guestInfo.city}${
+				guestInfo.notes ? ` - ${guestInfo.notes}` : ''
+			}`;
+
+			// Prepare order data for API
+			const orderData = {
+				customer_name: guestInfo.name,
+				customer_email: guestInfo.email,
+				customer_phone: guestInfo.phone,
+				customer_address: customerAddress,
+				total_amount: total,
+				items: items.map((item) => ({
+					product_id: item.product.id,
+					quantity: item.quantity,
+					price: item.product.priceValue,
+				})),
+			};
+
+			// Create order via API route
+			const response = await fetch('/api/orders', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(orderData),
+			});
+
+			const result = await response.json();
+
+			if (result.success && result.data) {
 				// Clear cart
 				clearCart();
 
 				// Redirect to order confirmation
-				router.push(`/order/${response.data.id}`);
+				router.push(`/order/${result.data.id}`);
 			} else {
-				alert(response.error || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+				alert(result.error || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
 				setIsSubmitting(false);
 				setIsProcessingOrder(false);
 			}
