@@ -117,6 +117,52 @@ export type Database = {
           price: number;
         }>;
       };
+      admin_users: {
+        Row: {
+          id: string;
+          username: string;
+          password_hash: string;
+          email: string | null;
+          is_active: boolean;
+          last_login_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          username: string;
+          password_hash: string;
+          email?: string | null;
+          is_active?: boolean;
+        };
+        Update: Partial<{
+          username: string;
+          password_hash: string;
+          email: string | null;
+          is_active: boolean;
+          last_login_at: string | null;
+        }>;
+      };
+      password_reset_tokens: {
+        Row: {
+          id: string;
+          admin_user_id: string;
+          token: string;
+          expires_at: string;
+          used: boolean;
+          created_at: string;
+        };
+        Insert: {
+          admin_user_id: string;
+          token: string;
+          expires_at: string;
+          used?: boolean;
+        };
+        Update: Partial<{
+          token: string;
+          expires_at: string;
+          used: boolean;
+        }>;
+      };
     };
   };
 };
