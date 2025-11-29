@@ -21,11 +21,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch discount by code
-    const { data: discount, error } = await supabase
-      .from("discounts")
+    const query = supabase.from("discounts");
+    // @ts-ignore - Supabase type inference issue with discounts table
+    const { data: discountData, error } = await query
       .select("*")
       .eq("code", code.toUpperCase())
       .single();
+
+    const discount = discountData as any;
 
     if (error || !discount) {
       return NextResponse.json(

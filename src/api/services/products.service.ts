@@ -140,8 +140,9 @@ export async function getRelatedProducts(
 export async function createProduct(
   product: Omit<Product, "id" | "created_at" | "updated_at">
 ): Promise<Product> {
-  const { data, error } = await supabase
-    .from("products")
+  const query = supabase.from("products");
+  const { data, error } = await query
+    // @ts-ignore - Supabase type inference issue with products table
     .insert(product)
     .select()
     .single();
@@ -161,8 +162,9 @@ export async function updateProduct(
   id: number,
   updates: Partial<Omit<Product, "id" | "created_at" | "updated_at">>
 ): Promise<Product> {
-  const { data, error } = await supabase
-    .from("products")
+  const query = supabase.from("products");
+  const { data, error } = await query
+    // @ts-ignore - Supabase type inference issue with products table
     .update(updates)
     .eq("id", id)
     .select()

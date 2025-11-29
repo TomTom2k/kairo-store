@@ -21,7 +21,7 @@ export async function getOrders(): Promise<AdminOrder[]> {
 				product:products (
 					id,
 					name,
-					image
+					images
 				)
 			)
 		`
@@ -52,7 +52,7 @@ export async function getOrderById(id: string): Promise<AdminOrder | null> {
 				product:products (
 					id,
 					name,
-					image
+					images
 				)
 			)
 		`
@@ -69,19 +69,23 @@ export async function getOrderById(id: string): Promise<AdminOrder | null> {
 }
 
 /**
- * Update order status
+ * Update order status via API route
  */
 export async function updateOrderStatus(
   id: string,
   status: string
 ): Promise<void> {
-  const { error } = await supabase
-    .from("orders")
-    .update({ status })
-    .eq("id", id);
+  const response = await fetch(`/api/orders/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
 
-  if (error) {
-    console.error("Error updating order status:", error);
-    throw new Error(`Failed to update order status: ${error.message}`);
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Failed to update order status");
   }
 }

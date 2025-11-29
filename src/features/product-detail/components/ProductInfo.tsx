@@ -6,7 +6,6 @@ import {
   Minus,
   Plus,
   ShoppingCart,
-  Heart,
   Share2,
   Check,
 } from "lucide-react";
@@ -23,7 +22,6 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const { addItem } = useCartStore();
   const [quantity, setQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -185,15 +183,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
               Thêm Vào Giỏ
             </>
           )}
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={() => setIsFavorite(!isFavorite)}
-          className={`p-6 ${isFavorite ? "text-red-500" : ""}`}
-          aria-label="Yêu thích"
-        >
-          <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
         </Button>
         <Button
           variant="outline"

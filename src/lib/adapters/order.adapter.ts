@@ -10,7 +10,7 @@ export type OrderWithItems = SupabaseOrder & {
     product: {
       id: number;
       name: string;
-      image: string;
+      images: string[];
     } | null;
   }[];
 };
@@ -53,7 +53,9 @@ export function adaptAdminOrder(supabaseOrder: any): AdminOrder {
         id: item.id,
         productId: item.product?.id || 0,
         productName: item.product?.name || "Unknown Product",
-        productImage: item.product?.image || "",
+        productImage: Array.isArray(item.product?.images) 
+          ? item.product.images[0] || "" 
+          : item.product?.images || "",
         quantity: item.quantity,
         price: item.price,
         total: item.price * item.quantity,

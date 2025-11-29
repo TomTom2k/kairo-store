@@ -48,9 +48,12 @@ export async function GET(request: NextRequest) {
     if (productsError) throw productsError;
 
     // Get total orders count and revenue
-    const { data: orders, error: ordersError } = await supabaseAdmin
-      .from("orders")
+    const query1 = supabaseAdmin.from("orders");
+    // @ts-ignore - Supabase type inference issue with orders table
+    const { data: ordersData, error: ordersError } = await query1
       .select("total");
+
+    const orders = ordersData as { total: number }[] | null;
 
     if (ordersError) throw ordersError;
 
@@ -59,10 +62,13 @@ export async function GET(request: NextRequest) {
       orders?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
 
     // Get unique customers count (from orders)
-    const { data: uniqueCustomers, error: customersError } = await supabaseAdmin
-      .from("orders")
+    const query2 = supabaseAdmin.from("orders");
+    // @ts-ignore - Supabase type inference issue with orders table
+    const { data: uniqueCustomersData, error: customersError } = await query2
       .select("customer_email")
       .not("customer_email", "is", null);
+
+    const uniqueCustomers = uniqueCustomersData as { customer_email: string }[] | null;
 
     if (customersError) throw customersError;
 

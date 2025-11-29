@@ -117,6 +117,34 @@ export type Database = {
           price: number;
         }>;
       };
+      categories: {
+        Row: {
+          id: number;
+          name: string;
+          slug: string;
+          description: string | null;
+          icon_name: string | null;
+          color: string | null;
+          bg_color: string | null;
+          created_at: string;
+        };
+        Insert: {
+          name: string;
+          slug: string;
+          description?: string | null;
+          icon_name?: string | null;
+          color?: string | null;
+          bg_color?: string | null;
+        };
+        Update: Partial<{
+          name: string;
+          slug: string;
+          description: string | null;
+          icon_name: string | null;
+          color: string | null;
+          bg_color: string | null;
+        }>;
+      };
       admin_users: {
         Row: {
           id: string;

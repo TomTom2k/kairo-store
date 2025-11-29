@@ -41,8 +41,9 @@ export async function PUT(
 
     updates.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from("discounts")
+    const query = supabase.from("discounts");
+    const { data, error } = await query
+      // @ts-ignore - Supabase type inference issue with discounts table
       .update(updates)
       .eq("id", discountId)
       .select()

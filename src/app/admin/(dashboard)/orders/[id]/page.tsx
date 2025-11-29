@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/shared/ui";
+import { Toast } from "@/shared/components/Toast";
 import {
   ArrowLeft,
   Package,
@@ -29,6 +31,8 @@ export default function AdminOrderDetailPage() {
   const params = useParams();
   const router = useRouter();
   const orderId = params?.id as string;
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const { data: order, isLoading } = useOrder(orderId);
   const updateStatusMutation = useUpdateOrderStatus();
@@ -54,12 +58,26 @@ export default function AdminOrderDetailPage() {
     );
   }
 
-  const handleStatusChange = (newStatus: string) => {
-    updateStatusMutation.mutate({ id: orderId, status: newStatus });
+  const handleStatusChange = async (newStatus: string) => {
+    try {
+      await updateStatusMutation.mutateAsync({ id: orderId, status: newStatus });
+      const statusLabel = statusOptions.find((opt) => opt.value === newStatus)?.label || newStatus;
+      setToastMessage(`Đã cập nhật trạng thái đơn hàng thành "${statusLabel}"`);
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage("Có lỗi xảy ra khi cập nhật trạng thái đơn hàng");
+      setShowToast(true);
+    }
   };
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto">
+    <>
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
+      <div className="space-y-8 max-w-5xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -248,5 +266,6 @@ export default function AdminOrderDetailPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

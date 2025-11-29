@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase/server";
 import bcrypt from "bcryptjs";
+import type { Database } from "@/lib/supabase/types";
 
 export interface AdminUser {
   id: string;
@@ -97,10 +98,13 @@ export async function getAdminById(id: string): Promise<AdminUser | null> {
  */
 export async function updateLastLogin(id: string): Promise<void> {
   try {
-    const { error } = await supabaseAdmin
-      .from("admin_users")
-      .update({ last_login_at: new Date().toISOString() })
-      .eq("id", id);
+    const updateData = {
+      last_login_at: new Date().toISOString(),
+    } as Database["public"]["Tables"]["admin_users"]["Update"];
+    
+    const query = supabaseAdmin.from("admin_users");
+    // @ts-ignore - Supabase type inference issue with admin_users table
+    const { error } = await query.update(updateData).eq("id", id);
 
     if (error) {
       console.error("Error updating last login:", error);

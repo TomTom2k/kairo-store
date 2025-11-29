@@ -21,7 +21,9 @@ export async function createResetToken(
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 15);
 
-    const { error } = await supabaseAdmin.from("password_reset_tokens").insert({
+    const query = supabaseAdmin.from("password_reset_tokens");
+    // @ts-ignore - Supabase type inference issue with password_reset_tokens table
+    const { error } = await query.insert({
       admin_user_id: adminUserId,
       token: otp,
       expires_at: expiresAt.toISOString(),
@@ -53,12 +55,15 @@ export async function requestPasswordReset(
     console.log("[Password Reset] Requesting reset for email:", email);
 
     // Find admin user by email
-    const { data: adminUser, error: userError } = await supabaseAdmin
-      .from("admin_users")
+    const query = supabaseAdmin.from("admin_users");
+    // @ts-ignore - Supabase type inference issue with admin_users table
+    const { data: adminUserData, error: userError } = await query
       .select("id, email, username")
       .eq("email", email.toLowerCase())
       .eq("is_active", true)
       .single();
+
+    const adminUser = adminUserData as { id: string; email: string; username: string } | null;
 
     console.log("[Password Reset] Query result:", { adminUser, userError });
 
@@ -121,20 +126,24 @@ export async function verifyOTP(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Find admin user
-    const { data: adminUser, error: userError } = await supabaseAdmin
-      .from("admin_users")
+    const query1 = supabaseAdmin.from("admin_users");
+    // @ts-ignore - Supabase type inference issue with admin_users table
+    const { data: adminUserData, error: userError } = await query1
       .select("id")
       .eq("username", username)
       .eq("is_active", true)
       .single();
+
+    const adminUser = adminUserData as { id: string } | null;
 
     if (userError || !adminUser) {
       return { success: false, error: "Tên đăng nhập không tồn tại" };
     }
 
     // Find valid token
-    const { data: token, error: tokenError } = await supabaseAdmin
-      .from("password_reset_tokens")
+    const query2 = supabaseAdmin.from("password_reset_tokens");
+    // @ts-ignore - Supabase type inference issue with password_reset_tokens table
+    const { data: token, error: tokenError } = await query2
       .select("*")
       .eq("admin_user_id", adminUser.id)
       .eq("token", otp)
@@ -171,12 +180,15 @@ export async function resetPassword(
     }
 
     // Find admin user
-    const { data: adminUser, error: userError } = await supabaseAdmin
-      .from("admin_users")
+    const query1 = supabaseAdmin.from("admin_users");
+    // @ts-ignore - Supabase type inference issue with admin_users table
+    const { data: adminUserData, error: userError } = await query1
       .select("id")
       .eq("username", username)
       .eq("is_active", true)
       .single();
+
+    const adminUser = adminUserData as { id: string } | null;
 
     if (userError || !adminUser) {
       return { success: false, error: "Tên đăng nhập không tồn tại" };
@@ -186,8 +198,9 @@ export async function resetPassword(
     const passwordHash = await bcrypt.hash(newPassword, 10);
 
     // Update password
-    const { error: updateError } = await supabaseAdmin
-      .from("admin_users")
+    const query2 = supabaseAdmin.from("admin_users");
+    const { error: updateError } = await query2
+      // @ts-ignore - Supabase type inference issue with admin_users table
       .update({ password_hash: passwordHash })
       .eq("id", adminUser.id);
 
@@ -197,8 +210,9 @@ export async function resetPassword(
     }
 
     // Mark token as used
-    await supabaseAdmin
-      .from("password_reset_tokens")
+    const query3 = supabaseAdmin.from("password_reset_tokens");
+    await query3
+      // @ts-ignore - Supabase type inference issue with password_reset_tokens table
       .update({ used: true })
       .eq("admin_user_id", adminUser.id)
       .eq("token", otp);
@@ -215,8 +229,9 @@ export async function resetPassword(
  */
 export async function cleanupExpiredTokens(): Promise<void> {
   try {
-    await supabaseAdmin
-      .from("password_reset_tokens")
+    const query = supabaseAdmin.from("password_reset_tokens");
+    // @ts-ignore - Supabase type inference issue with password_reset_tokens table
+    await query
       .delete()
       .or(`expires_at.lt.${new Date().toISOString()},used.eq.true`);
   } catch (error) {

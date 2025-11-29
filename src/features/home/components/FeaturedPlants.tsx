@@ -1,70 +1,25 @@
-import { Star } from "lucide-react";
-import Image from "next/image";
 import { PlantCard } from "@/shared/components/cards";
 import { ScrollReveal, ParallaxSection } from "@/shared/animations";
 import Link from "next/link";
-
-const plants = [
-  {
-    id: 1,
-    name: "Monstera Deliciosa",
-    price: "599.000đ",
-    priceValue: 599000,
-    rating: 4.8,
-    images: [
-      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&h=600&fit=crop",
-    ],
-    description: "Cây lý tưởng cho không gian trong nhà, dễ chăm sóc",
-    badge: "Bán Chạy",
-    category: "Cây Trong Nhà",
-    quantity: 15,
-  },
-  {
-    id: 2,
-    name: "Cây Trầu Bà",
-    price: "299.000đ",
-    priceValue: 299000,
-    rating: 4.9,
-    images: [
-      "https://images.unsplash.com/photo-1597704374039-6e6d7f42c0b5?w=600&h=600&fit=crop",
-    ],
-    description: "Dễ chăm sóc, phù hợp người mới bắt đầu trồng cây",
-    badge: "Giảm 20%",
-    category: "Cây Văn Phòng",
-    quantity: 23,
-  },
-  {
-    id: 3,
-    name: "Cây Đa Búp Đỏ",
-    price: "450.000đ",
-    priceValue: 450000,
-    rating: 4.7,
-    images: [
-      "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=600&h=600&fit=crop",
-    ],
-    description: "Mang lại may mắn và tài lộc cho gia đình",
-    badge: "Mới",
-    category: "Cây Phong Thủy",
-    quantity: 18,
-  },
-  {
-    id: 4,
-    name: "Cây Lưỡi Hổ",
-    price: "199.000đ",
-    priceValue: 199000,
-    rating: 4.6,
-    images: [
-      "https://images.unsplash.com/photo-1593691509543-c55fb32d8de5?w=600&h=600&fit=crop",
-    ],
-    description: "Lọc không khí hiệu quả, phù hợp phòng ngủ",
-    badge: null,
-    category: "Cây Lọc Không Khí",
-    quantity: 30,
-  },
-];
+import { getProducts } from "@/api/services/products.service";
+import {
+  adaptSupabaseProducts,
+  type Product,
+} from "@/lib/adapters/product.adapter";
 
 // Server Component - Content được render server-side cho SEO
-export function FeaturedPlants() {
+export async function FeaturedPlants() {
+  // Lấy sản phẩm từ database, lấy 4 sản phẩm đầu tiên
+  let plants: Product[] = [];
+  try {
+    const allProducts = await getProducts();
+    const adaptedProducts = adaptSupabaseProducts(allProducts);
+    plants = adaptedProducts.slice(0, 4);
+  } catch (error) {
+    console.error("Error fetching featured plants:", error);
+    // Nếu có lỗi, trả về mảng rỗng để component vẫn render được
+    plants = [];
+  }
   return (
     <section
       className="relative py-16 md:py-20 bg-background overflow-hidden"
